@@ -1,0 +1,4 @@
+web_url = "0.0.0.0:8080"
+pg = { user = 'postgres', password = 'postgres', host = '127.0.0.1', port = 5432, dbname = 'rust_template_db', pool.max_size = 16 }
+service_name = "rust-api-server"
+exporter_endpoint = "http://localhost:7281"

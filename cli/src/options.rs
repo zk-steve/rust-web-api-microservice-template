@@ -5,6 +5,8 @@ use serde::{Deserialize, Serialize};
 #[derive(Serialize, Deserialize)]
 pub struct Options {
     pub web_url: String,
+    pub exporter_endpoint: String,
+    pub service_name: String,
     pub pg: deadpool_postgres::Config,
 }
 
@@ -12,6 +14,8 @@ impl Default for Options {
     fn default() -> Self {
         Self {
             web_url: "0.0.0.0:8080".into(),
+            exporter_endpoint: "".to_string(),
+            service_name: "".to_string(),
             pg: deadpool_postgres::Config::default(),
         }
     }

@@ -1,14 +1,18 @@
 mod options;
 mod telemetry;
 
-use crate::telemetry::init_telemetry;
 use crate::options::Options;
+use crate::telemetry::init_telemetry;
+
+use library::question::{Question, QuestionId};
+use library::routes::Router;
+use library::store::Store;
 
 use clap::Parser;
-use opentelemetry::trace::{Tracer};
-use tracing::{error};
-use opentelemetry::{global};
-
+use opentelemetry::global;
+use std::net::SocketAddrV4;
+use std::str::FromStr;
+use tracing::error;
 
 /// Simple REST server
 #[derive(Parser, Debug)]
@@ -21,15 +25,40 @@ struct Args {
     config_file: String,
 }
 
-const EXPORTER_ENDPOINT: &str = "http://localhost:7281";
-const SERVICE_NAME: &str = "rust-api-server";
-
 #[tokio::main]
 async fn main() {
-    init_telemetry(SERVICE_NAME, EXPORTER_ENDPOINT);
-    global::shutdown_tracer_provider();
     let args = Args::parse();
-    Options::new(args.config_file.as_str()).map_err(|_e| {
-        error!("error occurs");
-    }).unwrap();
+    let options = Options::new(args.config_file.as_str())
+        .map_err(|e| {
+            error!("Error occurs {}", e);
+        })
+        .unwrap();
+
+    init_telemetry(
+        options.service_name.as_str(),
+        options.exporter_endpoint.as_str(),
+    );
+
+    let store = Store::new();
+    for a in 0..100 {
+        store
+            .add(Question::new(
+                QuestionId::from_str(a.to_string().as_str()).unwrap(),
+                "title".to_string(),
+                "content".to_string(),
+                None,
+            ))
+            .await
+            .unwrap();
+    }
+
+    let router: Router = Router::new(store);
+
+    let address = SocketAddrV4::from_str(options.web_url.as_str())
+        .map_err(|e| {
+            error!("Error occurs {}", e);
+        })
+        .unwrap();
+    warp::serve(router.routes()).run(address).await;
+    global::shutdown_tracer_provider();
 }
