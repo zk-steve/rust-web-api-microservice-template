@@ -16,8 +16,6 @@ use tracing::error;
 
 /// Simple REST server
 #[derive(Parser, Debug)]
-#[command(name = "rust-server")]
-#[command(version = "1.0")]
 #[command(version, about, long_about = None)]
 struct Args {
     /// Config file
