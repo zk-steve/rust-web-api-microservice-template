@@ -30,4 +30,5 @@ Demonstrate proficiency in advanced development practices including:
 3. [ ] Multiple Implementations.
 4. [x] Advanced Tracing.
 5. [ ] CI/CD.
+    1. [ ] Migrate DB tool/image.
 6. [x] Docker Image Optimization.

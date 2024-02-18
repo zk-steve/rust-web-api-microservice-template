@@ -20,5 +20,6 @@ tracing-bunyan-formatter = "*"
 opentelemetry = { version = "0.21.0" }
 opentelemetry_sdk = { version = "0.21.2", features = ["rt-tokio"] }
 opentelemetry-otlp = { version = "0.14.0", features = ["tonic"] }
-opentelemetry-semantic-conventions = { version = "*"}
+opentelemetry-semantic-conventions = { version = "*" }
 futures = "*"
+library = { path = "../library" }
