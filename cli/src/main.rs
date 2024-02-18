@@ -19,7 +19,7 @@ use tracing::error;
 #[command(version, about, long_about = None)]
 struct Args {
     /// Config file
-    #[arg(short, long, default_value = "config/config.app.toml")]
+    #[arg(short, long, default_value = "deploy/local/config.app.toml")]
     config_file: String,
 }
 
