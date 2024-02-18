@@ -1,6 +1,7 @@
 version: "3.8"
 networks:
   rust-api-server:
+name: "rust-api-server-docker"
 services:
   quickwit:
     image: quickwit/quickwit:latest
