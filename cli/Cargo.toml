@@ -9,5 +9,16 @@ tokio = { version = "1.2", features = ["full"] }
 serde = { version = "1.0", features = ["derive"] }
 config = "0.14.0"
 readonly = "0.2.12"
-deadpool-postgres = {version = "0.12.1",features = ["serde"]}
+deadpool-postgres = { version = "0.12.1", features = ["serde"] }
 clap = { version = "4.4.7", features = ["derive"] }
+tracing = "0.1"
+tracing-futures = "0.2"
+tracing-attributes = "0.1"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
+tracing-opentelemetry = "*"
+tracing-bunyan-formatter = "*"
+opentelemetry = { version = "0.21.0" }
+opentelemetry_sdk = { version = "0.21.2", features = ["rt-tokio"] }
+opentelemetry-otlp = { version = "0.14.0", features = ["tonic"] }
+opentelemetry-semantic-conventions = { version = "*"}
+futures = "*"
