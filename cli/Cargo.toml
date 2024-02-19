@@ -23,3 +23,4 @@ opentelemetry-otlp = { version = "0.14.0", features = ["tonic"] }
 opentelemetry-semantic-conventions = { version = "*" }
 futures = "*"
 library = { path = "../library" }
+glob = "0.3.1"

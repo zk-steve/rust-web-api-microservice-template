@@ -1,0 +1,4 @@
+service_name = "rust-api-server-local"
+
+[server]
+port = 8888
