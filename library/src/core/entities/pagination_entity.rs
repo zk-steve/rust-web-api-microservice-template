@@ -1,8 +1,9 @@
 use crate::common::errors::Error;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 /// Represents pagination parameters.
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct PaginationEntity {
     /// Start index for pagination.
     pub start: usize,

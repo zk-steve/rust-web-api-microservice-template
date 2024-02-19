@@ -1,20 +1,26 @@
-use crate::controller::QuestionController;
-use crate::errors::return_error;
-use crate::store::Store;
-
+use crate::common::errors::return_error;
+use crate::controller::{add_question, delete_question, get_questions, update_question};
+use crate::core::ports::question::QuestionPort;
+use std::sync::Arc;
 use warp::http::Method;
 use warp::{Filter, Rejection, Reply};
 
+/// Router for handling HTTP requests related to questions.
 pub struct Router {
-    store: Store,
+    question_port: Arc<dyn QuestionPort + Send + Sync + 'static>,
 }
 
 impl Router {
-    pub fn new(store: Store) -> Self {
-        Router { store }
+    /// Creates a new Router instance with the specified QuestionPort.
+    pub fn new(question_port: Arc<dyn QuestionPort + Send + Sync + 'static>) -> Self {
+        Router {
+            question_port: question_port.clone(),
+        }
     }
+
+    /// Configures and returns the Warp filter for handling HTTP requests.
     pub fn routes(self) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
-        let store_filter = warp::any().map(move || self.store.clone());
+        let store_filter = warp::any().map(move || self.question_port.clone());
         let cors = warp::cors()
             .allow_any_origin()
             .allow_header("content-type")
@@ -24,14 +30,14 @@ impl Router {
             .and(warp::path::end())
             .and(store_filter.clone())
             .and(warp::query())
-            .and_then(QuestionController::get_questions);
+            .and_then(get_questions);
 
         let add_question = warp::post()
             .and(warp::path("questions"))
             .and(warp::path::end())
             .and(store_filter.clone())
             .and(warp::body::json())
-            .and_then(QuestionController::add_question);
+            .and_then(add_question);
 
         let update_question = warp::put()
             .and(warp::path("questions"))
@@ -39,14 +45,14 @@ impl Router {
             .and(warp::path::param::<String>())
             .and(warp::path::end())
             .and(warp::body::json())
-            .and_then(QuestionController::update_question);
+            .and_then(update_question);
 
         let delete_question = warp::delete()
             .and(warp::path("questions"))
-            .and(store_filter)
+            .and(store_filter.clone())
             .and(warp::path::param::<String>())
             .and(warp::path::end())
-            .and_then(QuestionController::delete_question);
+            .and_then(delete_question);
 
         get_items
             .with(cors)

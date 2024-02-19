@@ -1,20 +1,40 @@
+/// Main module for running a simple REST server.
+///
+/// This module provides the entry point for running a simple REST server. It parses command-line
+/// arguments, loads configuration options, initializes telemetry, sets up database repositories,
+/// and starts the server to handle incoming HTTP requests.
+///
+/// The server can be configured using a TOML configuration file, with default values provided
+/// for missing or unspecified options.
+///
+/// # Example
+///
+/// ```rust
+/// use my_server_module::main;
+///
+/// // Start the server with default configuration
+/// main();
+/// ```
 mod options;
 mod telemetry;
 
 use crate::options::Options;
 use crate::telemetry::init_telemetry;
 
-use library::question::{Question, QuestionId};
-use library::store::Store;
-
 use clap::Parser;
+use library::adapter::repositories::question::QuestionInMemoryRepository;
+use library::core::entities::question::{QuestionEntity, QuestionId};
+use library::core::ports::question::QuestionPort;
 use library::routes::Router;
 use opentelemetry::global;
 use std::net::{Ipv4Addr, SocketAddrV4};
 use std::str::FromStr;
+use std::sync::Arc;
 
+use library::adapter::repositories::question_db::QuestionDBRepository;
+use tracing::{error, info};
 
-/// Simple REST server
+/// Simple REST server.
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
@@ -23,14 +43,17 @@ struct Args {
     config_path: Vec<String>,
 }
 
+/// Entry point for running the server.
 #[tokio::main]
 async fn main() {
     let args = Args::parse();
-    let options = Options::new(args.config_path)
-        .map_err(|e| {
-            println!("Error occurs: {}", e);
-        })
-        .unwrap();
+    let options = match Options::new(args.config_path) {
+        Ok(options) => options,
+        Err(err) => {
+            error!("Failed to load config: {}", err);
+            return;
+        }
+    };
 
     init_telemetry(
         options.service_name.as_str(),
@@ -38,20 +61,32 @@ async fn main() {
         options.log.level.as_str(),
     );
 
-    let store = Store::new();
+    let question_port: Arc<dyn QuestionPort + Send + Sync> = if options.db.in_memory.is_some() {
+        info!("Using in-memory database");
+        Arc::new(QuestionInMemoryRepository::new())
+    } else if options.db.pg.is_some() {
+        Arc::new(QuestionDBRepository::new())
+    } else {
+        info!("No database specified, falling back to in-memory");
+        Arc::new(QuestionInMemoryRepository::new())
+    };
+
     for a in 0..100 {
-        store
-            .add(Question::new(
-                QuestionId::from_str(a.to_string().as_str()).unwrap(),
+        if let Err(err) = question_port
+            .add(QuestionEntity::new(
+                QuestionId::from_str(&a.to_string()).unwrap(),
                 "title".to_string(),
                 "content".to_string(),
                 None,
             ))
             .await
-            .unwrap();
+        {
+            error!("Failed to add question: {:?}", err);
+            return;
+        }
     }
 
-    let router: Router = Router::new(store);
+    let router = Router::new(question_port);
 
     let address = SocketAddrV4::new(
         Ipv4Addr::from_str(options.server.url.as_str()).unwrap(),
