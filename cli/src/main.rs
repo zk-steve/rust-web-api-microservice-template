@@ -5,36 +5,37 @@ use crate::options::Options;
 use crate::telemetry::init_telemetry;
 
 use library::question::{Question, QuestionId};
-use library::routes::Router;
 use library::store::Store;
 
 use clap::Parser;
+use library::routes::Router;
 use opentelemetry::global;
-use std::net::SocketAddrV4;
+use std::net::{Ipv4Addr, SocketAddrV4};
 use std::str::FromStr;
-use tracing::error;
+
 
 /// Simple REST server
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
     /// Config file
-    #[arg(short, long, default_value = "deploy/local/config.app.toml")]
-    config_file: String,
+    #[arg(short, long, default_value = "config/default.toml")]
+    config_path: Vec<String>,
 }
 
 #[tokio::main]
 async fn main() {
     let args = Args::parse();
-    let options = Options::new(args.config_file.as_str())
+    let options = Options::new(args.config_path)
         .map_err(|e| {
-            error!("Error occurs {}", e);
+            println!("Error occurs: {}", e);
         })
         .unwrap();
 
     init_telemetry(
         options.service_name.as_str(),
         options.exporter_endpoint.as_str(),
+        options.log.level.as_str(),
     );
 
     let store = Store::new();
@@ -52,11 +53,10 @@ async fn main() {
 
     let router: Router = Router::new(store);
 
-    let address = SocketAddrV4::from_str(options.web_url.as_str())
-        .map_err(|e| {
-            error!("Error occurs {}", e);
-        })
-        .unwrap();
+    let address = SocketAddrV4::new(
+        Ipv4Addr::from_str(options.server.url.as_str()).unwrap(),
+        options.server.port,
+    );
     warp::serve(router.routes()).run(address).await;
     global::shutdown_tracer_provider();
 }
