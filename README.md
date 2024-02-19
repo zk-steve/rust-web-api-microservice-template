@@ -94,5 +94,6 @@ Demonstrate proficiency in advanced development practices including:
 5. [ ] CI/CD.
     1. [ ] Migrate DB tool/image.
 6. [x] Docker Image Optimization.
+7. [ ] Load test using K6s.
 
 Feel free to explore and expand upon these functionalities as needed for your project. Happy coding!
