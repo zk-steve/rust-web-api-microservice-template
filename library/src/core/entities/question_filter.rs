@@ -1,10 +1,11 @@
 use crate::common::errors::Error;
 use crate::core::entities::filter_entity::FilterEntity;
 use crate::core::entities::pagination_entity::PaginationEntity;
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 /// Represents filters for querying questions.
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct QuestionFilter {
     /// Pagination parameters for the query.
     pub pagination: PaginationEntity,
