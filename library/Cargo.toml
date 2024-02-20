@@ -12,7 +12,9 @@ tokio = { version = "1.2", features = ["full"] }
 serde = { version = "1.0", features = ["derive"] }
 config = "0.14.0"
 readonly = "0.2.12"
-deadpool-postgres = {version = "0.12.1",features = ["serde"]}
+deadpool-diesel = { version = "0.5.0", features = ["postgres", "serde"] }
 clap = { version = "4.4.7", features = ["derive"] }
-tracing = {version =  "0.1", features = ["tracing-attributes"] }
+tracing = { version = "0.1", features = ["tracing-attributes"] }
 async-trait = "0.1.77"
+diesel = { version = "2.1.0", features = ["postgres", "postgres_backend", "uuid"] }
+uuid = { version = "1.7.0", features = ["serde", "v4", "fast-rng", "macro-diagnostics"] }

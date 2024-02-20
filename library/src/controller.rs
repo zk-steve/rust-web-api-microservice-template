@@ -24,6 +24,22 @@ pub async fn get_questions(
     Ok(warp::reply::json(&questions))
 }
 
+/// Handler for retrieving a question by ID.
+///
+/// This function retrieves a question with the specified ID from the system. It takes the ID of
+/// the question to be got as a string and a reference to the QuestionPort trait object. It returns
+/// a JSON response containing the question.
+#[instrument(level = "info", skip(question_port))]
+pub async fn get_question(
+    question_port: Arc<dyn QuestionPort + Send + Sync>,
+    id: String,
+) -> Result<impl Reply, Rejection> {
+    let question = question_port
+        .get(&QuestionId::from_str(id.as_str()).unwrap())
+        .await?;
+    Ok(warp::reply::json(&question))
+}
+
 /// Handler for adding a new question.
 ///
 /// This function adds a new question to the system. It takes a QuestionEntity representing the

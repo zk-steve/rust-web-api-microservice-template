@@ -22,8 +22,11 @@ use crate::options::Options;
 use crate::telemetry::init_telemetry;
 
 use clap::Parser;
-use library::adapter::repositories::question::QuestionInMemoryRepository;
-use library::core::entities::question::{QuestionEntity, QuestionId};
+
+use deadpool_diesel::postgres::{Pool, Runtime};
+use deadpool_diesel::Manager;
+use library::adapter::repositories::in_memory::question::QuestionInMemoryRepository;
+
 use library::core::ports::question::QuestionPort;
 use library::routes::Router;
 use opentelemetry::global;
@@ -31,7 +34,7 @@ use std::net::{Ipv4Addr, SocketAddrV4};
 use std::str::FromStr;
 use std::sync::Arc;
 
-use library::adapter::repositories::question_db::QuestionDBRepository;
+use library::adapter::repositories::postgres::question_db::QuestionDBRepository;
 use tracing::{error, info};
 
 /// Simple REST server.
@@ -65,26 +68,18 @@ async fn main() {
         info!("Using in-memory database");
         Arc::new(QuestionInMemoryRepository::new())
     } else if options.db.pg.is_some() {
-        Arc::new(QuestionDBRepository::new())
+        info!("Using postgres database");
+        let database_config = options.db.pg.clone().unwrap();
+        let manager = Manager::new(database_config.url, Runtime::Tokio1);
+        let pool = Pool::builder(manager)
+            .max_size(database_config.max_size)
+            .build()
+            .unwrap();
+        Arc::new(QuestionDBRepository::new(pool))
     } else {
         info!("No database specified, falling back to in-memory");
         Arc::new(QuestionInMemoryRepository::new())
     };
-
-    for a in 0..100 {
-        if let Err(err) = question_port
-            .add(QuestionEntity::new(
-                QuestionId::from_str(&a.to_string()).unwrap(),
-                "title".to_string(),
-                "content".to_string(),
-                None,
-            ))
-            .await
-        {
-            error!("Failed to add question: {:?}", err);
-            return;
-        }
-    }
 
     let router = Router::new(question_port);
 

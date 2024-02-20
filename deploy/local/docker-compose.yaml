@@ -23,3 +23,15 @@ services:
       GRPC_STORAGE_SERVER: 'quickwit:7281'
     ports:
       - '16686:16686'
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - "5432:5432"
+volumes:
+  postgres:

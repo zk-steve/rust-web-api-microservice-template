@@ -1,6 +1,7 @@
-use config::ConfigError::{Message};
+use config::ConfigError::Message;
 use config::{Config, ConfigError, Environment, File};
 use glob::glob;
+use library::adapter::repositories::postgres::config::DBConfig;
 use serde::Deserialize;
 
 /// Configuration options for the application.
@@ -29,7 +30,7 @@ pub struct Database {
     /// Configuration for using in-memory database.
     pub in_memory: Option<InMemoryDatabase>,
     /// Configuration for PostgresSQL.
-    pub pg: Option<deadpool_postgres::Config>,
+    pub pg: Option<DBConfig>,
 }
 
 /// Represents in-memory database configuration.

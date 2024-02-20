@@ -30,21 +30,21 @@ impl QuestionInMemoryRepository {
 
 #[async_trait]
 impl QuestionPort for QuestionInMemoryRepository {
-    async fn add(&self, question: QuestionEntity) -> Result<(), Error> {
+    async fn add(&self, question: QuestionEntity) -> Result<QuestionEntity, Error> {
         self.questions
             .write()
             .await
-            .insert(question.id.clone(), question);
-        Ok(())
+            .insert(question.id.clone(), question.clone());
+        Ok(question.clone())
     }
 
-    async fn update(&self, question: QuestionEntity) -> Result<(), Error> {
+    async fn update(&self, question: QuestionEntity) -> Result<QuestionEntity, Error> {
         self.get(&question.id).await?;
         self.questions
             .write()
             .await
-            .insert(question.id.clone(), question);
-        Ok(())
+            .insert(question.id.clone(), question.clone());
+        Ok(question.clone())
     }
 
     async fn delete(&self, question_id: &QuestionId) -> Result<(), Error> {

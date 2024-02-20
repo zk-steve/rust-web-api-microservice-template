@@ -57,15 +57,12 @@ Hierarchical child config via env, separated by using `__`. Specify list values 
 | ENV                  | DEFAULT VALUE | NOTE      |
 |----------------------|---------------|-----------|
 | RUST_LOG > LOG_LEVEL | "INFO"        | Log level |
-| WEB_URL              |               |           |
+| SERVER__URL          |               |           |
+| SERVER__PORT         |               |           |
 | SERVICE_NAME         |               |           |
 | EXPORTER_ENDPOINT    |               |           |
-| PG__USERNAME         |               |           |
-| PG__PASSWORD         |               |           |
-| PG__HOST             |               |           |
-| PG__PORT             |               |           |
-| PG__DBNAME           |               |           |
-| PG__MAX_SIZE         |               |           |
+| DB__PG__URL          |               |           |
+| DB__PG__MAX_SIZE     |               |           |
 
 Make sure to set these environment variables according to your needs before running the server.
 
