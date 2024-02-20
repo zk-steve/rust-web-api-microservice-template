@@ -5,7 +5,7 @@ use std::str::FromStr;
 
 /// Identifier for a question.
 #[derive(Debug, Serialize, Deserialize, Eq, Hash, PartialEq, Clone)]
-pub struct QuestionId(String);
+pub struct QuestionId(pub(crate) String);
 
 impl FromStr for QuestionId {
     type Err = Error;

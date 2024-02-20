@@ -1,5 +1,7 @@
 use crate::common::errors::return_error;
-use crate::controller::{add_question, delete_question, get_questions, update_question};
+use crate::controller::{
+    add_question, delete_question, get_question, get_questions, update_question,
+};
 use crate::core::ports::question::QuestionPort;
 use std::sync::Arc;
 use warp::http::Method;
@@ -25,12 +27,19 @@ impl Router {
             .allow_any_origin()
             .allow_header("content-type")
             .allow_methods(&[Method::PUT, Method::DELETE, Method::GET, Method::POST]);
-        let get_items = warp::get()
+        let get_questions = warp::get()
             .and(warp::path("questions"))
             .and(warp::path::end())
             .and(store_filter.clone())
             .and(warp::query())
             .and_then(get_questions);
+
+        let get_question = warp::get()
+            .and(warp::path("questions"))
+            .and(store_filter.clone())
+            .and(warp::path::param::<String>())
+            .and(warp::path::end())
+            .and_then(get_question);
 
         let add_question = warp::post()
             .and(warp::path("questions"))
@@ -54,8 +63,9 @@ impl Router {
             .and(warp::path::end())
             .and_then(delete_question);
 
-        get_items
+        get_questions
             .with(cors)
+            .or(get_question)
             .or(delete_question)
             .or(update_question)
             .or(add_question)

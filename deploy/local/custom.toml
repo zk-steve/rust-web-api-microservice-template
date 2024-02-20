@@ -2,3 +2,7 @@ service_name = "rust-api-server-local"
 
 [server]
 port = 8888
+
+[db.pg]
+url = "postgres://postgres:changeme@localhost:5432/postgres"
+max_size = 10
