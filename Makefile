@@ -34,3 +34,6 @@ build:
 
 build-dev:
 	BUILDKIT_PROGRESS=plain DOCKER_BUILDKIT=1 docker build --ssh default -t $(PKG_NAME):$(BUILD_VERSION) --target=dev .
+
+profiling:
+	CARGO_PROFILE_RELEASE_DEBUG=true cargo flamegraph --root --  -c ./config/* -c deploy/local/custom.toml
