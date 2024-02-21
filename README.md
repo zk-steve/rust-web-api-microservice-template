@@ -54,15 +54,15 @@ options:
 
 Hierarchical child config via env, separated by using `__`. Specify list values by using `,` separator
 
-| ENV                  | DEFAULT VALUE | NOTE      |
-|----------------------|---------------|-----------|
-| RUST_LOG > LOG_LEVEL | "INFO"        | Log level |
-| SERVER__URL          |               |           |
-| SERVER__PORT         |               |           |
-| SERVICE_NAME         |               |           |
-| EXPORTER_ENDPOINT    |               |           |
-| DB__PG__URL          |               |           |
-| DB__PG__MAX_SIZE     |               |           |
+| ENV                   | DEFAULT VALUE | NOTE      |
+|-----------------------|---------------|-----------|
+| RUST_LOG > LOG__LEVEL | "INFO"        | Log level |
+| SERVER__URL           |               |           |
+| SERVER__PORT          |               |           |
+| SERVICE_NAME          |               |           |
+| EXPORTER_ENDPOINT     |               |           |
+| DB__PG__URL           |               |           |
+| DB__PG__MAX_SIZE      |               |           |
 
 Make sure to set these environment variables according to your needs before running the server.
 
@@ -94,7 +94,8 @@ Demonstrate proficiency in advanced development practices including:
     2. [ ] Publish binary artifacts in Github.
     3. [ ] Push Docker images.
 6. [x] Docker Image Optimization.
-7. [ ] Load test using K6.
+7. [x] Load test using K6.
+    1. [x] Use flamegraph for profiling.
 8. [ ] Comprehensive DB query filter for list().
 
 Feel free to explore and expand upon these functionalities as needed for your project. Happy coding!

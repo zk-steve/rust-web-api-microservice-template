@@ -1,0 +1,10 @@
+version: "3.8"
+networks:
+  rust-api-server:
+name: "rust-api-server-local"
+services:
+  loadtest:
+    image: grafana/k6
+    command: [ "run", "/test.js" ]
+    volumes:
+      - ./test.js:/test.js

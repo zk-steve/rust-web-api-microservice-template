@@ -6,7 +6,6 @@ use crate::core::entities::question::{QuestionEntity, QuestionId};
 use async_trait::async_trait;
 use deadpool_diesel::postgres::Pool;
 
-use diesel::upsert::on_constraint;
 use diesel::{delete, insert_into, QueryDsl, RunQueryDsl, SelectableHelper};
 use diesel::{update, ExpressionMethods};
 
