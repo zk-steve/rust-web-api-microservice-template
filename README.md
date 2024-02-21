@@ -85,12 +85,16 @@ include:
 Demonstrate proficiency in advanced development practices including:
 
 1. [x] CLI Interface.
+    1. [ ] Embed Git Info, Config Tool.
 2. [x] Load Configuration from a File.
 3. [x] Multiple Implementations.
 4. [x] Advanced Tracing.
 5. [ ] CI/CD.
     1. [ ] Migrate DB tool/image.
+    2. [ ] Publish binary artifacts in Github.
+    3. [ ] Push Docker images.
 6. [x] Docker Image Optimization.
-7. [ ] Load test using K6s.
+7. [ ] Load test using K6.
+8. [ ] Comprehensive DB query filter for list().
 
 Feel free to explore and expand upon these functionalities as needed for your project. Happy coding!
