@@ -34,7 +34,7 @@ Options:
 ./cli -c ./config/* -c deploy/local/custom.toml
 ```
 
-- Pipe the output with bunyan
+- Pipe the output with [bunyan](https://github.com/trentm/node-bunyan)
 
 ```shell
 cargo install bunyan
@@ -54,15 +54,15 @@ options:
 
 Hierarchical child config via env, separated by using `__`. Specify list values by using `,` separator
 
-| ENV                   | DEFAULT VALUE | NOTE      |
-|-----------------------|---------------|-----------|
-| RUST_LOG > LOG__LEVEL | "INFO"        | Log level |
-| SERVER__URL           |               |           |
-| SERVER__PORT          |               |           |
-| SERVICE_NAME          |               |           |
-| EXPORTER_ENDPOINT     |               |           |
-| DB__PG__URL           |               |           |
-| DB__PG__MAX_SIZE      |               |           |
+| ENV                                                                    | DEFAULT VALUE | NOTE      |
+|------------------------------------------------------------------------|---------------|-----------|
+| [RUST_LOG](https://docs.rs/env_logger/latest/env_logger/) > LOG__LEVEL | "INFO"        | Log level |
+| SERVER__URL                                                            |               |           |
+| SERVER__PORT                                                           |               |           |
+| SERVICE_NAME                                                           |               |           |
+| EXPORTER_ENDPOINT                                                      |               |           |
+| DB__PG__URL                                                            |               |           |
+| DB__PG__MAX_SIZE                                                       |               |           |
 
 Make sure to set these environment variables according to your needs before running the server.
 
@@ -76,9 +76,9 @@ include:
 1. [x] Incorporating descriptive comments to enhance code readability.
 2. [x] Implementing tracing mechanisms for effective debugging.
 3. [ ] Writing comprehensive test cases to validate functionality.
-4. [x] Utilizing version control with Git for code management.
+4. [x] Utilizing version control with [Git](https://git-scm.com/) for code management.
 5. [x] Structuring code in a logical and maintainable manner.
-6. [x] Containerizing the application using Docker for portability and scalability.
+6. [x] Containerizing the application using [Docker](https://www.docker.com/) for portability and scalability.
 
 ### Advanced Functionalities
 
@@ -91,11 +91,17 @@ Demonstrate proficiency in advanced development practices including:
 4. [x] Advanced Tracing.
 5. [ ] CI/CD.
     1. [ ] Migrate DB tool/image.
-    2. [ ] Publish binary artifacts in Github.
+    2. [ ] Publish binary artifacts in [Github](https://github.com/).
     3. [ ] Push Docker images.
 6. [x] Docker Image Optimization.
-7. [x] Load test using K6.
-    1. [x] Use flamegraph for profiling.
+7. [x] Load test using [K6](https://k6.io/).
+    1. [x] Use [Flamegraph](https://github.com/flamegraph-rs/flamegraph) for profiling.
 8. [ ] Comprehensive DB query filter for list().
 
 Feel free to explore and expand upon these functionalities as needed for your project. Happy coding!
+
+## Load Testing and Profiling
+
+For load testing and profiling your Rust API server, refer to
+the [Load Testing and Profiling with K6 and Flamegraph](./load-tests/README.md) guide. This document provides
+detailed instructions on using K6 and Flamegraph for load testing and profiling purposes.
