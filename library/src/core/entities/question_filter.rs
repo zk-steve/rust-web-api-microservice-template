@@ -37,7 +37,7 @@ impl QuestionFilter {
     ///         println!("Parsed question filter: {:?}", question_filter);
     ///     }
     ///     Err(err) => {
-    ///         eprintln!("Failed to parse question filter: {}", err);
+    ///         eprintln!("Failed to parse question filter: {:?}", err);
     ///     }
     /// }
     /// ```

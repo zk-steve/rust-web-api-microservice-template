@@ -8,6 +8,7 @@ use warp::http::Method;
 use warp::{Filter, Rejection, Reply};
 
 /// Router for handling HTTP requests related to questions.
+#[derive(Clone)]
 pub struct Router {
     question_port: Arc<dyn QuestionPort + Send + Sync + 'static>,
 }
