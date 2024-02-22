@@ -15,6 +15,11 @@
 /// // Start the server with default configuration
 /// main();
 /// ```
+use openssl;
+
+#[macro_use]
+use diesel;
+
 mod options;
 mod telemetry;
 
