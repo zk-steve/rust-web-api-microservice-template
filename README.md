@@ -22,8 +22,8 @@ Usage: cli [OPTIONS]
 
 Options:
   -c, --config-file <CONFIG_FILE>  Config file [default: config/default.toml]
+  -v, --version                    Print version
   -h, --help                       Print help
-  -V, --version                    Print version
 ```
 
 ### Example
@@ -85,7 +85,7 @@ include:
 Demonstrate proficiency in advanced development practices including:
 
 1. [x] CLI Interface.
-    1. [ ] Embed Git Info, Config Tool.
+    1. [x] Embed Git Info, Config Tool.
 2. [x] Load Configuration from a File.
 3. [x] Multiple Implementations.
 4. [x] Advanced Tracing.
@@ -96,7 +96,9 @@ Demonstrate proficiency in advanced development practices including:
 6. [x] Docker Image Optimization.
 7. [x] Load test using [K6](https://k6.io/).
     1. [x] Use [Flamegraph](https://github.com/flamegraph-rs/flamegraph) for profiling.
+    2. [ ] Better UI https://medium.com/swlh/beautiful-load-testing-with-k6-and-docker-compose-4454edb3a2e3.
 8. [ ] Comprehensive DB query filter for list().
+9. [ ] Optimize release binary performance.
 
 Feel free to explore and expand upon these functionalities as needed for your project. Happy coding!
 
