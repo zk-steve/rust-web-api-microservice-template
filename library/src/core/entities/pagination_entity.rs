@@ -39,7 +39,7 @@ impl PaginationEntity {
     ///         println!("Parsed pagination entity: {:?}", pagination_entity);
     ///     }
     ///     Err(err) => {
-    ///         eprintln!("Failed to parse pagination entity: {}", err);
+    ///         eprintln!("Failed to parse pagination entity: {:?}", err);
     ///     }
     /// }
     /// ```

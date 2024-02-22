@@ -6,7 +6,7 @@ use warp::reject::Reject;
 
 use warp::{Rejection, Reply};
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub enum Error {
     ParseError(std::num::ParseIntError),
     MissingParameters,
