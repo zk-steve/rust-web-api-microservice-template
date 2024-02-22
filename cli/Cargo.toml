@@ -24,3 +24,5 @@ opentelemetry-semantic-conventions = { version = "*" }
 futures = "*"
 library = { path = "../library" }
 glob = "0.3.1"
+openssl = "*"
+diesel = { version = "2.1.0", features = ["postgres", "postgres_backend", "uuid"] }
