@@ -13,7 +13,7 @@ use serde::Deserialize;
 pub struct Options {
     /// Configuration for the server.
     pub server: Server,
-    /// Specifies whether to use a database and holds its configuration.
+    /// Specifies the backend database will be used.
     pub db: Database,
     /// The endpoint for the exporter.
     pub exporter_endpoint: String,

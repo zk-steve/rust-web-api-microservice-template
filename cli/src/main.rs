@@ -39,17 +39,24 @@ use tracing::{error, info};
 
 /// Simple REST server.
 #[derive(Parser, Debug)]
-#[command(version, about, long_about = None)]
+#[command(about, long_about = None)]
 struct Args {
     /// Config file
     #[arg(short, long, default_value = "config/default.toml")]
     config_path: Vec<String>,
+    /// Print version
+    #[clap(short, long)]
+    version: bool,
 }
 
 /// Entry point for running the server.
 #[tokio::main]
 async fn main() {
     let args = Args::parse();
+    if args.version == true {
+        println!(env!("CLI_IMPL_VERSION"));
+        return;
+    }
     let options = match Options::new(args.config_path) {
         Ok(options) => options,
         Err(err) => {
