@@ -3,14 +3,18 @@ use crate::adapter::repositories::postgres::schema::questions::dsl::questions;
 use crate::adapter::repositories::postgres::schema::questions::id;
 use crate::common::errors::Error;
 use crate::core::entities::question::{QuestionEntity, QuestionId};
-use async_trait::async_trait;
-use deadpool_diesel::postgres::Pool;
-
-use diesel::{delete, insert_into, QueryDsl, RunQueryDsl, SelectableHelper};
-use diesel::{update, ExpressionMethods};
-
 use crate::core::entities::question_filter::QuestionFilter;
 use crate::core::ports::question::QuestionPort;
+use async_trait::async_trait;
+
+use deadpool_diesel::postgres::Pool;
+use diesel::{delete, insert_into, QueryDsl, RunQueryDsl, SelectableHelper};
+use diesel::{update, ExpressionMethods};
+use diesel_migrations::{embed_migrations, EmbeddedMigrations};
+
+// NOTE: path relative to Cargo.toml
+pub const MIGRATIONS: EmbeddedMigrations =
+    embed_migrations!("../library/src/adapter/repositories/postgres/migrations");
 
 #[derive(Clone)]
 pub struct QuestionDBRepository {
@@ -32,11 +36,14 @@ impl QuestionPort for QuestionDBRepository {
             .unwrap()
             .interact(move |conn| {
                 let question = QuestionModel::from(question);
-                let updated: QuestionModel = insert_into(questions)
+                let response = insert_into(questions)
                     .values(&question)
-                    .get_result(conn)
-                    .unwrap();
-                Ok(updated.to_entity())
+                    .get_result::<QuestionModel>(conn)
+                    .map_err(|err| match err {
+                        diesel::result::Error::NotFound => Error::NotFound,
+                        _ => Error::InternalError,
+                    });
+                Ok(response.unwrap().to_entity())
             })
             .await
             .unwrap()
@@ -49,11 +56,15 @@ impl QuestionPort for QuestionDBRepository {
             .unwrap()
             .interact(move |conn| {
                 let question = QuestionModel::from(question);
-                let updated: QuestionModel = update(questions.filter(id.eq(question.id)))
+                let response = update(questions.filter(id.eq(question.id)))
                     .set(&question)
-                    .get_result(conn)
-                    .unwrap();
-                Ok(updated.to_entity())
+                    .get_result::<QuestionModel>(conn)
+                    .map_err(|err| match err {
+                        diesel::result::Error::NotFound => Error::NotFound,
+                        _ => Error::InternalError,
+                    })?;
+
+                Ok(response.to_entity())
             })
             .await
             .unwrap()
@@ -66,9 +77,13 @@ impl QuestionPort for QuestionDBRepository {
             .await
             .unwrap()
             .interact(move |conn| {
-                delete(questions.filter(id.eq(question_id)))
+                let _ = delete(questions.filter(id.eq(question_id)))
                     .execute(conn)
-                    .unwrap();
+                    .map_err(|err| match err {
+                        diesel::result::Error::NotFound => Error::NotFound,
+                        _ => Error::InternalError,
+                    })?;
+
                 Ok(())
             })
             .await
@@ -82,16 +97,16 @@ impl QuestionPort for QuestionDBRepository {
             .await
             .unwrap()
             .interact(move |conn| {
-                let model = questions
+                let response = questions
                     .select(QuestionModel::as_select())
                     .find(question_id)
-                    .first(conn);
+                    .first(conn)
+                    .map_err(|err| match err {
+                        diesel::result::Error::NotFound => Error::NotFound,
+                        _ => Error::InternalError,
+                    })?;
 
-                let res = match model {
-                    Ok(model) => Ok(model.to_entity()),
-                    Err(_) => Err(Error::NotFound),
-                };
-                res
+                Ok(response.to_entity())
             })
             .await
             .unwrap()
@@ -103,12 +118,17 @@ impl QuestionPort for QuestionDBRepository {
             .await
             .unwrap()
             .interact(move |conn| {
-                Ok(questions
+                let question_list = questions
                     .select(QuestionModel::as_select())
                     .load(conn)
-                    .unwrap()
-                    .iter()
-                    .map(|l| l.clone().to_entity())
+                    .map_err(|err| match err {
+                        diesel::result::Error::NotFound => Error::NotFound,
+                        _ => Error::InternalError,
+                    })?;
+
+                Ok(question_list
+                    .into_iter()
+                    .map(|l| l.to_entity())
                     .collect::<Vec<_>>())
             })
             .await
