@@ -19,3 +19,6 @@ async-trait = "0.1.77"
 diesel = { version = "2.1.0", features = ["postgres", "postgres_backend", "uuid"] }
 uuid = { version = "1.7.0", features = ["serde", "v4", "fast-rng", "macro-diagnostics"] }
 serde_json = "1.0"
+testcontainers = "0.15.0"
+testcontainers-modules = {version = "0.3.4", features = ["postgres"]}
+rand = "0.8.4"
