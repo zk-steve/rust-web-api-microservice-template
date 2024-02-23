@@ -59,13 +59,16 @@ impl QuestionPort for QuestionDBRepository {
             .unwrap()
     }
 
-    async fn delete(&self, _question_id: &QuestionId) -> Result<(), Error> {
+    async fn delete(&self, question_id: &QuestionId) -> Result<(), Error> {
+        let question_id = question_id.to_id();
         self.db
             .get()
             .await
             .unwrap()
             .interact(move |conn| {
-                delete(questions.filter(id.eq(1))).execute(conn).unwrap();
+                delete(questions.filter(id.eq(question_id)))
+                    .execute(conn)
+                    .unwrap();
                 Ok(())
             })
             .await
@@ -82,9 +85,13 @@ impl QuestionPort for QuestionDBRepository {
                 let model = questions
                     .select(QuestionModel::as_select())
                     .find(question_id)
-                    .first(conn)
-                    .unwrap();
-                Ok(model.to_entity())
+                    .first(conn);
+
+                let res = match model {
+                    Ok(model) => Ok(model.to_entity()),
+                    Err(_) => Err(Error::NotFound),
+                };
+                res
             })
             .await
             .unwrap()
@@ -101,7 +108,7 @@ impl QuestionPort for QuestionDBRepository {
                     .load(conn)
                     .unwrap()
                     .iter()
-                    .map(|l| l.to_entity())
+                    .map(|l| l.clone().to_entity())
                     .collect::<Vec<_>>())
             })
             .await
