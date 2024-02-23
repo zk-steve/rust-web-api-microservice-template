@@ -3,7 +3,7 @@ use diesel::{AsChangeset, Identifiable, Insertable, Queryable, Selectable};
 use serde::Serialize;
 use std::time::SystemTime;
 
-#[derive(Debug, Queryable, Serialize, Selectable, Insertable, AsChangeset, Identifiable, Clone)]
+#[derive(Debug, Queryable, Serialize, Selectable, Insertable, AsChangeset, Identifiable)]
 #[table_name = "super::super::schema::questions"]
 #[cfg_attr(feature = "postgres", derive(diesel::pg::Pg))]
 pub struct QuestionModel {

@@ -1,15 +1,15 @@
-version: "3.8"
+version: "3.3"
 networks:
   rust-api-server:
-name: "rust-api-server-docker"
+name: "rust-api-server-local"
 services:
   quickwit:
     image: quickwit/quickwit:latest
     command: run
     restart: always
     environment:
-      QW_ENABLE_OTLP_ENDPOINT: true
-      QW_ENABLE_JAEGER_ENDPOINT: true
+      QW_ENABLE_OTLP_ENDPOINT: 'true'
+      QW_ENABLE_JAEGER_ENDPOINT: 'true'
     ports:
       - '7280:7280'
       - '7281:7281'
@@ -33,3 +33,5 @@ services:
       - postgres:/data/postgres
     ports:
       - "5432:5432"
+volumes:
+  postgres:
