@@ -75,7 +75,8 @@ include:
 
 1. [x] Incorporating descriptive comments to enhance code readability.
 2. [x] Implementing tracing mechanisms for effective debugging.
-3. [ ] Writing comprehensive test cases to validate functionality.
+3. [x] Writing comprehensive test cases to validate functionality.
+    1. [x] Using https://testcontainers.com for integration tests.
 4. [x] Utilizing version control with [Git](https://git-scm.com/) for code management.
 5. [x] Structuring code in a logical and maintainable manner.
 6. [x] Containerizing the application using [Docker](https://www.docker.com/) for portability and scalability.
@@ -93,14 +94,16 @@ Demonstrate proficiency in advanced development practices including:
     1. [ ] Migrate DB tool/image.
     2. [ ] Publish binary artifacts in [Github](https://github.com/).
     3. [ ] Push Docker images.
+    4. [ ] 
+       Deploy [Dependabot](https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuring-dependabot-version-updates)
 6. [x] Docker Image Optimization.
 7. [x] Load test using [K6](https://k6.io/).
     1. [x] Use [Flamegraph](https://github.com/flamegraph-rs/flamegraph) for profiling.
-    2. [ ] Better UI https://medium.com/swlh/beautiful-load-testing-with-k6-and-docker-compose-4454edb3a2e3.
+    2. [ ] [Better UI](https://medium.com/swlh/beautiful-load-testing-with-k6-and-docker-compose-4454edb3a2e3).
 8. [ ] Comprehensive DB query filter for list().
 9. [ ] Optimize release binary performance.
-
-Feel free to explore and expand upon these functionalities as needed for your project. Happy coding!
+10. [ ] Docs on how to use this repo, the design behind the scene.
+    Feel free to explore and expand upon these functionalities as needed for your project. Happy coding!
 
 ## Load Testing and Profiling
 
