@@ -70,6 +70,15 @@ Hierarchical child config via env, separated by using `__`. Specify list values 
 
 Make sure to set these environment variables according to your needs before running the server.
 
+## GitHub Flow CI Configuration
+
+1. **Set Docker Hub Secrets:**
+   - Go to repository Settings > Secrets.
+   - Add `DOCKER_USERNAME` and `DOCKERHUB_TOKEN`.
+
+2. **Enable Dependabot Alerts:**
+   - In repository Insights, enable "Dependabot alerts" and "Security & Analysis."
+
 ## Checklist
 
 ### Basic Functionalities
@@ -94,11 +103,11 @@ Demonstrate proficiency in advanced development practices including:
 2. [x] Load Configuration from a File.
 3. [x] Multiple Implementations.
 4. [x] Advanced Tracing.
-5. [ ] CI/CD.
+5. [x] CI/CD.
     1. [ ] Migrate DB tool/image.
-    2. [ ] Publish binary artifacts in [Github](https://github.com/).
-    3. [ ] Push Docker images.
-    4. [ ] 
+    2. [x] Publish binary artifacts in [Github](https://github.com/).
+    3. [x] Push Docker images.
+    4. [x] 
        Deploy [Dependabot](https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuring-dependabot-version-updates)
 6. [x] Docker Image Optimization.
 7. [x] Load test using [K6](https://k6.io/).

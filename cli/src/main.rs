@@ -15,9 +15,11 @@
 /// // Start the server with default configuration
 /// main();
 /// ```
+
+#[cfg_attr(debug_assertions, allow(dead_code, unused_imports))]
 use openssl;
 
-#[macro_use]
+#[cfg_attr(debug_assertions, allow(dead_code, unused_imports))]
 use diesel;
 
 mod options;
@@ -40,7 +42,7 @@ use std::str::FromStr;
 use std::sync::Arc;
 
 use library::adapter::repositories::postgres::question_db::QuestionDBRepository;
-use tracing::{error, info};
+use tracing::info;
 
 /// Simple REST server.
 #[derive(Parser, Debug)]
@@ -49,7 +51,7 @@ struct Args {
     #[command(subcommand)]
     command: Option<Commands>,
     /// Config file
-    #[arg(short, long, default_value = "config/default.toml")]
+    #[arg(short, long, default_value = "config/00-default.toml")]
     config_path: Vec<String>,
     /// Print version
     #[clap(short, long)]
@@ -66,7 +68,7 @@ enum Commands {
 #[tokio::main]
 async fn main() {
     let args = Args::parse();
-    if args.version == true {
+    if args.version {
         println!(env!("APP_VERSION"));
         return;
     }

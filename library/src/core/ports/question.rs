@@ -87,7 +87,7 @@ mod tests {
         assert_eq!(result.unwrap(), updated_question);
 
         let result = question_port.delete(&question_id).await;
-        assert_eq!(result.is_ok(), true);
+        assert!(result.is_ok());
     }
 
     #[tokio::test]
@@ -103,10 +103,10 @@ mod tests {
         let docker = Cli::default();
         let postgres_instance = docker.run(Postgres::default());
 
-        let database_url = String::from(format!(
+        let database_url = format!(
             "postgres://postgres:postgres@127.0.0.1:{}/postgres",
             postgres_instance.get_host_port_ipv4(5432)
-        ));
+        );
         let database_config = DatabaseConfig {
             url: database_url.clone(),
             max_size: 10,
