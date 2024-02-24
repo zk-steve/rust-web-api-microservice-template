@@ -8,8 +8,8 @@ services:
     command: run
     restart: always
     environment:
-      QW_ENABLE_OTLP_ENDPOINT: true
-      QW_ENABLE_JAEGER_ENDPOINT: true
+      QW_ENABLE_OTLP_ENDPOINT: 'true'
+      QW_ENABLE_JAEGER_ENDPOINT: 'true'
     ports:
       - '7280:7280'
       - '7281:7281'
