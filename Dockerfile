@@ -20,10 +20,15 @@ COPY . .
 RUN cargo build --release --target x86_64-unknown-linux-musl --bin cli
 
 FROM scratch AS prod
-COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/cli /usr/local/bin/rust-server
-CMD ["/usr/local/bin/rust-server"]
-
-FROM prod AS dev
 WORKDIR /user
+COPY config/00-default.toml 00-default.toml
+COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/cli /usr/local/bin/rust-server
+ENTRYPOINT ["/usr/local/bin/rust-server", "--config-path=*.toml"]
+
+FROM alpine AS dev
+WORKDIR /user
+COPY config/00-default.toml 00-default.toml
+COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/cli /usr/local/bin/rust-server
 COPY --from=bunyan /root/.cargo/bin/bunyan /usr/local/bin/
-CMD ["/usr/local/bin/rust-server | bunyan"]
+ENTRYPOINT ["/bin/sh"]
+CMD ["-c", "/usr/local/bin/rust-server --config-path=*.toml | bunyan"]
