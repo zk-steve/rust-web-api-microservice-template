@@ -1,5 +1,10 @@
 # RUST API SERVER
 
+![Logo](./logo.png)
+
+[![License](https://img.shields.io/github/license/sonntuet1997/rust-web-api-microservice-template.svg)](https://github.com/sonntuet1997/rust-web-api-microservice-template/blob/master/LICENSE)
+[![Continuous Integration](https://github.com/sonntuet1997/rust-web-api-microservice-template/actions/workflows/ci.yaml/badge.svg)](https://github.com/sonntuet1997/rust-web-api-microservice-template/actions/workflows/ci.yaml)
+
 ## Introduction
 
 Welcome to the Rust API Server! This server provides a simple REST interface for your applications. This README will
@@ -35,14 +40,14 @@ Options:
 - Multiple config locations
 
 ```shell
-./cli -c ./config/* -c deploy/local/custom.toml
+./cli -c ./config/*.toml -c deploy/local/custom.toml
 ```
 
 - Pipe the output with [bunyan](https://github.com/trentm/node-bunyan)
 
 ```shell
 cargo install bunyan
-./cli -c ./config/* -c deploy/local/custom.toml | bunyan
+./cli -c ./config/*.toml -c deploy/local/custom.toml | bunyan
 ```
 
 ## Configuration
@@ -50,6 +55,8 @@ cargo install bunyan
 ### Order of apply
 
 Configuration is applied in the following order: config files -> environment variables -> command-line arguments.
+
+If you use `-c *.toml` to load config files, please be mindful of the order in which the files are applied.
 
 ### Environment Variable Examples
 
@@ -73,11 +80,11 @@ Make sure to set these environment variables according to your needs before runn
 ## GitHub Flow CI Configuration
 
 1. **Set Docker Hub Secrets:**
-   - Go to repository Settings > Secrets.
-   - Add `DOCKER_USERNAME` and `DOCKERHUB_TOKEN`.
+    - Go to repository Settings > Secrets.
+    - Add `DOCKER_USERNAME` and `DOCKERHUB_TOKEN`.
 
 2. **Enable Dependabot Alerts:**
-   - In repository Insights, enable "Dependabot alerts" and "Security & Analysis."
+    - In repository Insights, enable "Dependabot alerts" and "Security & Analysis."
 
 ## Checklist
 
@@ -116,7 +123,8 @@ Demonstrate proficiency in advanced development practices including:
 8. [ ] Comprehensive DB query filter for list().
 9. [ ] Optimize release binary performance.
 10. [ ] Docs on how to use this repo, the design behind the scene.
-    Feel free to explore and expand upon these functionalities as needed for your project. Happy coding!
+
+Feel free to explore and expand upon these functionalities as needed for your project. Happy coding!
 
 ## Load Testing and Profiling
 
