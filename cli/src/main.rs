@@ -51,7 +51,7 @@ struct Args {
     #[command(subcommand)]
     command: Option<Commands>,
     /// Config file
-    #[arg(short, long, default_value = "config/default.toml")]
+    #[arg(short, long, default_value = "config/00-default.toml")]
     config_path: Vec<String>,
     /// Print version
     #[clap(short, long)]
