@@ -18,10 +18,14 @@ This will display the available options for running the server:
 ```
 Simple REST server
 
-Usage: cli [OPTIONS]
+Usage: cli [OPTIONS] [COMMAND]
+
+Commands:
+  config  Print config
+  help    Print this message or the help of the given subcommand(s)
 
 Options:
-  -c, --config-file <CONFIG_FILE>  Config file [default: config/default.toml]
+  -c, --config-path <CONFIG_PATH>  Config file [default: config/default.toml]
   -v, --version                    Print version
   -h, --help                       Print help
 ```
