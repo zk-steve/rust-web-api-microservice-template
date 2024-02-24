@@ -59,7 +59,7 @@ struct Args {
 async fn main() {
     let args = Args::parse();
     if args.version == true {
-        println!(env!("CLI_IMPL_VERSION"));
+        println!(env!("APP_VERSION"));
         return;
     }
     let options = match Options::new(args.config_path) {
