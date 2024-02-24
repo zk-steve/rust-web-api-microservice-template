@@ -15,9 +15,11 @@
 /// // Start the server with default configuration
 /// main();
 /// ```
+
+#[cfg_attr(debug_assertions, allow(dead_code, unused_imports))]
 use openssl;
 
-#[macro_use]
+#[cfg_attr(debug_assertions, allow(dead_code, unused_imports))]
 use diesel;
 
 mod options;
@@ -26,7 +28,7 @@ mod telemetry;
 use crate::options::Options;
 use crate::telemetry::init_telemetry;
 
-use clap::Parser;
+use clap::{Parser, Subcommand};
 
 use deadpool_diesel::postgres::{Pool, Runtime};
 use deadpool_diesel::Manager;
@@ -40,12 +42,14 @@ use std::str::FromStr;
 use std::sync::Arc;
 
 use library::adapter::repositories::postgres::question_db::QuestionDBRepository;
-use tracing::{error, info};
+use tracing::info;
 
 /// Simple REST server.
 #[derive(Parser, Debug)]
 #[command(about, long_about = None)]
 struct Args {
+    #[command(subcommand)]
+    command: Option<Commands>,
     /// Config file
     #[arg(short, long, default_value = "config/default.toml")]
     config_path: Vec<String>,
@@ -54,21 +58,33 @@ struct Args {
     version: bool,
 }
 
+#[derive(Subcommand, Clone, Debug)]
+enum Commands {
+    /// Print config
+    Config,
+}
+
 /// Entry point for running the server.
 #[tokio::main]
 async fn main() {
     let args = Args::parse();
-    if args.version == true {
+    if args.version {
         println!(env!("APP_VERSION"));
         return;
     }
+
     let options = match Options::new(args.config_path) {
         Ok(options) => options,
         Err(err) => {
-            error!("Failed to load config: {}", err);
+            println!("Failed to load config: {}", err);
             return;
         }
     };
+
+    if let Some(Commands::Config) = args.command {
+        println!("{:#?}", options);
+        return;
+    }
 
     init_telemetry(
         options.service_name.as_str(),

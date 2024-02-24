@@ -3,7 +3,7 @@ mod tests {
         postgres::{Pool, Runtime},
         Manager,
     };
-    use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
+    use diesel_migrations::MigrationHarness;
     use library::{
         adapter::repositories::{
             in_memory::question::QuestionInMemoryRepository,
@@ -72,7 +72,7 @@ mod tests {
 
         // Deserialize the response body into a Value
         let get_question: QuestionEntity =
-            serde_json::from_slice(&get_resp.body()).expect("Failed to deserialize response body");
+            serde_json::from_slice(get_resp.body()).expect("Failed to deserialize response body");
 
         assert_eq!(
             get_question, question,
@@ -118,7 +118,7 @@ mod tests {
         );
 
         // Deserialize the response body into a Value
-        let get_updated_question: QuestionEntity = serde_json::from_slice(&get_updated_resp.body())
+        let get_updated_question: QuestionEntity = serde_json::from_slice(get_updated_resp.body())
             .expect("Failed to deserialize response body");
 
         assert_eq!(
@@ -173,10 +173,10 @@ mod tests {
         let docker = Cli::default();
         let postgres_instance = docker.run(Postgres::default());
 
-        let database_url = String::from(format!(
+        let database_url = format!(
             "postgres://postgres:postgres@127.0.0.1:{}/postgres",
             postgres_instance.get_host_port_ipv4(5432)
-        ));
+        );
         let database_config = DatabaseConfig {
             url: database_url.clone(),
             max_size: 10,
