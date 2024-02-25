@@ -10,6 +10,27 @@
 Welcome to the Rust API Server! This server provides a simple REST interface for your applications. This README will
 guide you through setting up and running the server, as well as configuring its various options.
 
+## Deploy
+**Automated Builds:**
+Builds are automatically generated for each commit to the repository in the `main` branch and are subsequently pushed to Docker Hub. Tags are applied using the commit SHA, branch name, and the latest tag if released on the main branch. You can find a list of available tags [here](https://hub.docker.com/r/thuan2172001/rust-server/tags).
+
+**Release Binaries:**
+For every release, separate `cli` binaries are built. These binaries can be downloaded from [here](https://github.com/sonntuet1997/rust-web-api-microservice-template/releases)  and are available for various operating systems and architectures. You are welcome to use the automated binaries or build your own.
+
+**Contributions and PRs:**
+If you submit a pull request, please note that images are not built by default. A maintainer will need to retag them for the build process to take place.
+
+### Docker
+1. Pull the docker image
+```commit to only the main branch
+docker pull thuan2172001/rust-server:latest
+```
+
+2. Run the image
+```
+docker run -d -p 8000:8000 thuan2172001/rust-server:latest
+```
+
 ## How To Run
 
 To get started, execute the following command in your terminal:
