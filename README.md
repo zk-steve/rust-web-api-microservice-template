@@ -1,6 +1,6 @@
 # RUST API SERVER
 
-![Logo](./logo.png)
+![Logo](./assets/logo.png)
 
 [![License](https://img.shields.io/github/license/sonntuet1997/rust-web-api-microservice-template)](https://github.com/sonntuet1997/rust-web-api-microservice-template/blob/master/LICENSE)
 [![Continuous Integration](https://github.com/sonntuet1997/rust-web-api-microservice-template/actions/workflows/ci.yaml/badge.svg)](https://github.com/sonntuet1997/rust-web-api-microservice-template/actions/workflows/ci.yaml)
