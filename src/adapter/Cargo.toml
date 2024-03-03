@@ -1,0 +1,19 @@
+[package]
+name = "adapter"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rust-core = { path = "../core" }
+async-trait = { version = "0.1.77" }
+tokio = { version = "1.2", features = ["full"] }
+diesel = { version = "2.1.0", features = [
+    "postgres",
+    "postgres_backend",
+    "uuid",
+] }
+serde = { version = "1.0", features = ["derive"] }
+deadpool-diesel = { version = "0.5.0", features = ["postgres", "serde"] }
+diesel_migrations = "2.1.0"
+testcontainers-modules = { version = "0.3.4", features = ["postgres"] }
+futures = "*"

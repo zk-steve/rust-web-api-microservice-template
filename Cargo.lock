@@ -3,6 +3,21 @@
 version = 3
 
 [[package]]
+name = "adapter"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "deadpool-diesel",
+ "diesel",
+ "diesel_migrations",
+ "futures",
+ "rust-core",
+ "serde",
+ "testcontainers-modules",
+ "tokio",
+]
+
+[[package]]
 name = "addr2line"
 version = "0.21.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -284,27 +299,32 @@ checksum = "98cc8fbded0c607b7ba9dd60cd98df59af97e84d24e49c8557331cfc26d301ce"
 name = "cli"
 version = "0.1.0"
 dependencies = [
+ "adapter",
  "clap",
  "config",
  "deadpool-diesel",
  "diesel",
- "futures",
+ "diesel_migrations",
  "glob",
- "library",
  "openssl",
  "opentelemetry",
  "opentelemetry-otlp",
  "opentelemetry-semantic-conventions 0.14.0",
  "opentelemetry_sdk",
+ "rand",
  "readonly",
+ "rust-core",
  "serde",
+ "serde_json",
+ "testcontainers",
+ "testcontainers-modules",
  "tokio",
  "tracing",
  "tracing-attributes",
  "tracing-bunyan-formatter",
- "tracing-futures",
  "tracing-opentelemetry",
  "tracing-subscriber",
+ "uuid",
  "warp",
 ]
 
@@ -986,28 +1006,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9c198f91728a82281a64e1f4f9eeb25d82cb32a5de251c6bd1b5154d63a8e7bd"
 
 [[package]]
-name = "library"
-version = "0.1.0"
-dependencies = [
- "async-trait",
- "clap",
- "config",
- "deadpool-diesel",
- "diesel",
- "diesel_migrations",
- "rand",
- "readonly",
- "serde",
- "serde_json",
- "testcontainers",
- "testcontainers-modules",
- "tokio",
- "tracing",
- "uuid",
- "warp",
-]
-
-[[package]]
 name = "linked-hash-map"
 version = "0.5.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1625,6 +1623,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "rust-core"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "serde",
+]
+
+[[package]]
 name = "rust-ini"
 version = "0.19.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2220,16 +2226,6 @@ checksum = "c06d3da6113f116aaee68e4d601191614c9053067f9ab7f6edbcb161237daa54"
 dependencies = [
  "once_cell",
  "valuable",
-]
-
-[[package]]
-name = "tracing-futures"
-version = "0.2.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "97d095ae15e245a057c8e8451bab9b3ee1e1f68e9ba2b4fbc18d0ac5237835f2"
-dependencies = [
- "pin-project",
- "tracing",
 ]
 
 [[package]]

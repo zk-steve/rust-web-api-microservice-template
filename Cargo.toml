@@ -1,6 +1,3 @@
 [workspace]
 resolver = "2"
-members = [
-    "cli",
-    "library",
-]
+members = ["src/public"]
