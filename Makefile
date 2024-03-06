@@ -1,4 +1,4 @@
-POSTGRES_DIR="./library/src/adapter/repositories/postgres"
+POSTGRES_DIR="./src/adapter/src/repositories/postgres"
 DATABASE_URL="postgres://postgres:changeme@127.0.0.1:5432/postgres"
 
 PKG_NAME=rust-api-server
@@ -35,5 +35,5 @@ build:
 build-dev:
 	BUILDKIT_PROGRESS=plain DOCKER_BUILDKIT=1 docker build --ssh default -t $(PKG_NAME):$(BUILD_VERSION) --target=dev .
 
-profiling:
-	CARGO_PROFILE_RELEASE_DEBUG=true cargo flamegraph --root --  -c ./config/* -c deploy/local/custom.toml
+profiling-public:
+	CARGO_PROFILE_RELEASE_DEBUG=true cargo flamegraph --root -- -c ./src/public/config/* -c ./deploy/local/custom.toml

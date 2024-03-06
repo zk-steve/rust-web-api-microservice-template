@@ -1,9 +1,10 @@
-use rust_core::common::errors::Error;
 use warp::body::BodyDeserializeError;
 use warp::cors::CorsForbidden;
 use warp::http::StatusCode;
 use warp::reject::Reject;
 use warp::{Rejection, Reply};
+
+use rust_core::common::errors::Error;
 
 #[derive(Debug)]
 pub struct WarpError(pub Error);

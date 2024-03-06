@@ -1,15 +1,16 @@
-use rust_core::entities::question_filter::QuestionFilter;
 use std::collections::HashMap;
 use std::str::FromStr;
 use std::sync::Arc;
+
 use tracing::instrument;
 use warp::http::StatusCode;
 use warp::{Rejection, Reply};
 
 use rust_core::entities::question::{QuestionEntity, QuestionId};
+use rust_core::entities::question_filter::QuestionFilter;
 use rust_core::ports::question::QuestionPort;
 
-use crate::common::errors::WarpError;
+use crate::errors::WarpError;
 
 /// Handler for retrieving questions based on query parameters.
 ///
@@ -21,11 +22,11 @@ pub async fn get_questions(
     question_port: Arc<dyn QuestionPort + Send + Sync>,
     query: HashMap<String, String>,
 ) -> Result<impl Reply, Rejection> {
-    let question_filter = QuestionFilter::from_query(&query).map_err(|err| WarpError(err))?;
+    let question_filter = QuestionFilter::from_query(&query).map_err(WarpError)?;
     let questions = question_port
         .list(&question_filter)
         .await
-        .map_err(|err| WarpError(err))?;
+        .map_err(WarpError)?;
     Ok(warp::reply::json(&questions))
 }
 
@@ -42,7 +43,7 @@ pub async fn get_question(
     let question = question_port
         .get(&QuestionId::from_str(id.as_str()).unwrap())
         .await
-        .map_err(|err| WarpError(err))?;
+        .map_err(WarpError)?;
     Ok(warp::reply::json(&question))
 }
 
@@ -56,10 +57,7 @@ pub async fn add_question(
     question_port: Arc<dyn QuestionPort + Send + Sync>,
     question: QuestionEntity,
 ) -> Result<impl Reply, Rejection> {
-    question_port
-        .add(question)
-        .await
-        .map_err(|err| WarpError(err))?;
+    question_port.add(question).await.map_err(WarpError)?;
     Ok(warp::reply::with_status("Question added", StatusCode::OK))
 }
 
@@ -76,7 +74,7 @@ pub async fn delete_question(
     question_port
         .delete(&QuestionId::from_str(id.as_str()).unwrap())
         .await
-        .map_err(|err| WarpError(err))?;
+        .map_err(WarpError)?;
     Ok(warp::reply::with_status("Question deleted", StatusCode::OK))
 }
 
@@ -93,9 +91,6 @@ pub async fn update_question(
     mut question: QuestionEntity,
 ) -> Result<impl Reply, Rejection> {
     question.id = QuestionId::from_str(id.as_str()).unwrap();
-    question_port
-        .update(question)
-        .await
-        .map_err(|err| WarpError(err))?;
+    question_port.update(question).await.map_err(WarpError)?;
     Ok(warp::reply::with_status("Question updated", StatusCode::OK))
 }

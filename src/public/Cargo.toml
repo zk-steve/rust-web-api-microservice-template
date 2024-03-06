@@ -4,39 +4,24 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-warp = "0.3"
-tokio = { version = "1.2", features = ["full"] }
+warp = "0.3.6"
+tokio = { version = "1.36.0", features = ["full"] }
 serde = { version = "1.0", features = ["derive"] }
-config = "0.14.0"
 readonly = "0.2.12"
 deadpool-diesel = { version = "0.5.0", features = ["postgres", "serde"] }
 clap = { version = "4.4.7", features = ["derive"] }
 tracing = "0.1"
-tracing-attributes = "0.1"
-tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
-tracing-opentelemetry = "*"
-tracing-bunyan-formatter = "*"
-opentelemetry = { version = "0.21.0" }
-opentelemetry_sdk = { version = "0.21.2", features = ["rt-tokio"] }
-opentelemetry-otlp = { version = "0.14.0", features = ["tonic"] }
-opentelemetry-semantic-conventions = { version = "*" }
-glob = "0.3.1"
-openssl = "*"
+opentelemetry = { version = "0.22.0" }
+openssl = { version = "0.10.63" }
 diesel = { version = "2.1.0", features = [
     "postgres",
     "postgres_backend",
     "uuid",
 ] }
-uuid = { version = "1.7.0", features = [
-    "serde",
-    "v4",
-    "fast-rng",
-    "macro-diagnostics",
-] }
 adapter = { path = "../adapter" }
-rust-core = { path = "../core" }
+rust_core = { path = "../core" }
+common = { path = "../common" }
 serde_json = "1.0"
-testcontainers = "0.15.0"
 testcontainers-modules = { version = "0.3.4", features = ["postgres"] }
 rand = "0.8.4"
 diesel_migrations = "2.1.0"

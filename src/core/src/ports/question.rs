@@ -1,7 +1,8 @@
+use async_trait::async_trait;
+
 use crate::common::errors::Error;
 use crate::entities::question::{QuestionEntity, QuestionId};
 use crate::entities::question_filter::QuestionFilter;
-use async_trait::async_trait;
 
 #[async_trait]
 pub trait QuestionPort {

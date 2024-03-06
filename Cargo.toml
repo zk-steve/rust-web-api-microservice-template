@@ -1,3 +1,5 @@
 [workspace]
 resolver = "2"
-members = ["src/public"]
+members = [
+    "src/public",
+]

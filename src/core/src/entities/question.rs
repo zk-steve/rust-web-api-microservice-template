@@ -1,7 +1,10 @@
-use crate::entities::entity::Entity;
-use serde::{Deserialize, Serialize};
+use std::fmt;
 use std::io::{Error, ErrorKind};
 use std::str::FromStr;
+
+use serde::{Deserialize, Serialize};
+
+use crate::entities::entity::Entity;
 
 /// Identifier for a question.
 #[derive(Debug, Serialize, Deserialize, Eq, Hash, PartialEq, Clone)]
@@ -41,6 +44,12 @@ impl FromStr for QuestionId {
             false => Ok(QuestionId(id.to_string())),
             true => Err(Error::new(ErrorKind::InvalidInput, "No id provided")),
         }
+    }
+}
+
+impl fmt::Display for QuestionId {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.0)
     }
 }
 
