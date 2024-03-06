@@ -1,18 +1,17 @@
-use crate::repositories::postgres::models::question::QuestionModel;
-use crate::repositories::postgres::schema::questions::dsl::questions;
-use crate::repositories::postgres::schema::questions::id;
 use async_trait::async_trait;
-use rust_core::common::errors::Error;
-use rust_core::entities::question::{QuestionEntity, QuestionId};
-use rust_core::entities::question_filter::QuestionFilter;
-use rust_core::ports::question::QuestionPort;
-
 use deadpool_diesel::postgres::Pool;
 use diesel::{delete, insert_into, QueryDsl, RunQueryDsl, SelectableHelper};
 use diesel::{update, ExpressionMethods};
 use diesel_migrations::{embed_migrations, EmbeddedMigrations};
 
-use super::models::id::ToId;
+use rust_core::common::errors::Error;
+use rust_core::entities::question::{QuestionEntity, QuestionId};
+use rust_core::entities::question_filter::QuestionFilter;
+use rust_core::ports::question::QuestionPort;
+
+use crate::repositories::postgres::models::question::QuestionModel;
+use crate::repositories::postgres::schema::questions::dsl::questions;
+use crate::repositories::postgres::schema::questions::id;
 
 // NOTE: path relative to Cargo.toml
 pub const MIGRATIONS: EmbeddedMigrations =
@@ -73,7 +72,7 @@ impl QuestionPort for QuestionDBRepository {
     }
 
     async fn delete(&self, question_id: &QuestionId) -> Result<(), Error> {
-        let question_id = question_id.to_id();
+        let question_id: i32 = question_id.to_string().parse().unwrap();
         self.db
             .get()
             .await
@@ -93,7 +92,7 @@ impl QuestionPort for QuestionDBRepository {
     }
 
     async fn get(&self, question_id: &QuestionId) -> Result<QuestionEntity, Error> {
-        let question_id = question_id.to_id();
+        let question_id: i32 = question_id.to_string().parse().unwrap();
         self.db
             .get()
             .await

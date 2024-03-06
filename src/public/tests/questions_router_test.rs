@@ -1,23 +1,25 @@
 mod tests {
-    use adapter::repositories::{
-        in_memory::question::QuestionInMemoryRepository,
-        postgres::question_db::{QuestionDBRepository, MIGRATIONS},
-    };
-    use cli::routers::router::Router;
+    use std::{str::FromStr, sync::Arc};
+
     use deadpool_diesel::{
         postgres::{Pool, Runtime},
         Manager,
     };
     use diesel_migrations::MigrationHarness;
     use rand::Rng;
+    use testcontainers_modules::{postgres::Postgres, testcontainers::clients::Cli};
+    use warp::http::StatusCode;
+    use warp::test::request;
+
+    use adapter::repositories::{
+        in_memory::question::QuestionInMemoryRepository,
+        postgres::question_db::{QuestionDBRepository, MIGRATIONS},
+    };
+    use cli::router::Router;
     use rust_core::{
         entities::question::{QuestionEntity, QuestionId},
         ports::question::QuestionPort,
     };
-    use std::{str::FromStr, sync::Arc};
-    use testcontainers_modules::{postgres::Postgres, testcontainers::clients::Cli};
-    use warp::http::StatusCode;
-    use warp::test::request;
 
     struct DatabaseConfig {
         url: String,

@@ -1,9 +1,9 @@
-use diesel::{AsChangeset, Identifiable, Insertable, Queryable, Selectable};
-use rust_core::entities::question::QuestionEntity;
-use serde::Serialize;
 use std::time::SystemTime;
 
-use super::id::ToId;
+use diesel::{AsChangeset, Identifiable, Insertable, Queryable, Selectable};
+use serde::Serialize;
+
+use rust_core::entities::question::QuestionEntity;
 
 #[derive(Debug, Queryable, Serialize, Selectable, Insertable, AsChangeset, Identifiable)]
 #[diesel(table_name = super::super::schema::questions)]
@@ -23,7 +23,7 @@ pub struct QuestionModel {
 impl QuestionModel {
     pub fn from(entity: QuestionEntity) -> Self {
         QuestionModel {
-            id: entity.id.to_id(),
+            id: entity.id.to_string().parse().unwrap(),
             title: entity.title,
             content: entity.content,
             tags: entity.tags.map(|v| v.into_iter().map(Some).collect()),

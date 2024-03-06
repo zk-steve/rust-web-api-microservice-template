@@ -1,0 +1,17 @@
+[package]
+name = "common"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+opentelemetry-semantic-conventions = { version = "0.14.0" }
+config = "0.14.0"
+glob = "0.3.1"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
+tracing-opentelemetry = "0.23.0"
+tracing-bunyan-formatter = "0.3.9"
+opentelemetry = { version = "0.22.0" }
+opentelemetry_sdk = { version = "0.22.1", features = ["rt-tokio"] }
+opentelemetry-otlp = { version = "0.15.0", features = ["tonic"] }

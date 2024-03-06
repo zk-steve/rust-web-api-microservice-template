@@ -1,6 +1,8 @@
-use crate::common::errors::Error;
-use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+
+use serde::{Deserialize, Serialize};
+
+use crate::common::errors::Error;
 
 /// Represents pagination parameters.
 #[derive(Debug, Serialize, Deserialize)]

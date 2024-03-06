@@ -1,9 +1,14 @@
 #[cfg(test)]
 mod tests {
-    use adapter::repositories::{
-        in_memory::question::QuestionInMemoryRepository,
-        postgres::question_db::{QuestionDBRepository, MIGRATIONS},
+    use std::collections::HashMap;
+    use std::{str::FromStr, sync::Arc};
+
+    use deadpool_diesel::{
+        postgres::{Pool, Runtime},
+        Manager,
     };
+    use diesel_migrations::MigrationHarness;
+    use testcontainers_modules::{postgres::Postgres, testcontainers::clients::Cli};
 
     use rust_core::{
         entities::{
@@ -14,14 +19,8 @@ mod tests {
         ports::question::QuestionPort,
     };
 
-    use deadpool_diesel::{
-        postgres::{Pool, Runtime},
-        Manager,
-    };
-    use diesel_migrations::MigrationHarness;
-    use std::collections::HashMap;
-    use std::{str::FromStr, sync::Arc};
-    use testcontainers_modules::{postgres::Postgres, testcontainers::clients::Cli};
+    use crate::repositories::in_memory::question::QuestionInMemoryRepository;
+    use crate::repositories::postgres::question_db::{QuestionDBRepository, MIGRATIONS};
 
     struct DatabaseConfig {
         url: String,

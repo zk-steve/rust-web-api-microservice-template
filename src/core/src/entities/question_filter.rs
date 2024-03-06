@@ -1,8 +1,10 @@
+use std::collections::HashMap;
+
+use serde::{Deserialize, Serialize};
+
 use crate::common::errors::Error;
 use crate::entities::filter_entity::FilterEntity;
 use crate::entities::pagination_entity::PaginationEntity;
-use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
 
 /// Represents filters for querying questions.
 #[derive(Debug, Serialize, Deserialize)]
