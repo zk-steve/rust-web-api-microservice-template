@@ -16,6 +16,7 @@ FROM chef AS builder
 COPY --from=planner /app/recipe.json recipe.json
 RUN cargo chef cook --release --recipe-path recipe.json
 COPY . .
+RUN cargo build --release --bin cli
 RUN mv target/${CARGO_BUILD_TARGET}/release /out
 
 FROM scratch AS prod
