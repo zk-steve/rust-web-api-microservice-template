@@ -11,22 +11,31 @@ Welcome to the Rust API Server! This server provides a simple REST interface for
 guide you through setting up and running the server, as well as configuring its various options.
 
 ## Deploy
+
 **Automated Builds:**
-Builds are automatically generated for each commit to the repository in the `main` branch and are subsequently pushed to Docker Hub. Tags are applied using the commit SHA, branch name, and the latest tag if released on the main branch. You can find a list of available tags [here](https://hub.docker.com/r/thuan2172001/rust-server/tags).
+Builds are automatically generated for each commit to the repository in the `main` branch and are subsequently pushed to Docker Hub.
+Tags are applied using the commit SHA, branch name, and the latest tag if released on the main branch. You can find a list of available
+tags [here](https://hub.docker.com/r/thuan2172001/rust-server/tags).
 
 **Release Binaries:**
-For every release, separate `cli` binaries are built. These binaries can be downloaded from [here](https://github.com/sonntuet1997/rust-web-api-microservice-template/releases)  and are available for various operating systems and architectures. You are welcome to use the automated binaries or build your own.
+For every release, separate `cli` binaries are built. These binaries can be downloaded
+from [here](https://github.com/sonntuet1997/rust-web-api-microservice-template/releases)  and are available for various operating
+systems and architectures. You are welcome to use the automated binaries or build your own.
 
 **Contributions and PRs:**
-If you submit a pull request, please note that images are not built by default. A maintainer will need to retag them for the build process to take place.
+If you submit a pull request, please note that images are not built by default. A maintainer will need to retag them for the build
+process to take place.
 
 ### Docker
+
 1. Pull the docker image
+
 ```commit to only the main branch
 docker pull thuan2172001/rust-server:latest
 ```
 
 2. Run the image
+
 ```
 docker run -d -p 8000:8000 thuan2172001/rust-server:latest
 ```
@@ -132,11 +141,10 @@ Demonstrate proficiency in advanced development practices including:
 3. [x] Multiple Implementations.
 4. [x] Advanced Tracing.
 5. [x] CI/CD.
-    1. [ ] Migrate DB tool/image.
-    2. [x] Publish binary artifacts in [Github](https://github.com/).
-    3. [x] Push Docker images.
-    4. [x] 
-       Deploy [Dependabot](https://docs.github.com/en/code-security/dependabot/dependabot-version-updates/configuring-dependabot-version-updates)
+    1. [x] Publish binary artifacts in [Github](https://github.com/).
+    2. [x] Push Docker images.
+    3. [x] Build pipeline on amd arch.
+    4. [ ] Build pipeline on arm arch.
 6. [x] Docker Image Optimization.
 7. [x] Load test using [K6](https://k6.io/).
     1. [x] Use [Flamegraph](https://github.com/flamegraph-rs/flamegraph) for profiling.
@@ -144,6 +152,9 @@ Demonstrate proficiency in advanced development practices including:
 8. [ ] Comprehensive DB query filter for list().
 9. [ ] Optimize release binary performance.
 10. [ ] Docs on how to use this repo, the design behind the scene.
+11. [x] Dependabot
+    1. [x] Update Rust.
+    2. [x] Update Docker image.
 
 Feel free to explore and expand upon these functionalities as needed for your project. Happy coding!
 
