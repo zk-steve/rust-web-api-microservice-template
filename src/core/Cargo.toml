@@ -18,17 +18,3 @@ version = "0.1.77"
 [dependencies.serde]
 version = "1.0"
 features = ["derive"]
-
-[lib]
-path = "src/lib.rs"
-name = "rust_core"
-test = true
-doctest = true
-bench = true
-doc = true
-plugin = false
-proc-macro = false
-harness = true
-edition = "2021"
-required-features = []
-crate-type = ["rlib"]
