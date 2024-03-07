@@ -1,18 +1,56 @@
+bin = []
+bench = []
+test = []
+example = []
+
 [package]
 name = "adapter"
-version = "0.1.0"
 edition = "2021"
+version = "0.0.1"
+autobins = true
+autoexamples = true
+autotests = true
+autobenches = true
 
 [dependencies]
-rust_core = { path = "../core" }
-async-trait = { version = "0.1.77" }
-tokio = { version = "1.36.0", features = ["full"] }
-diesel = { version = "2.1.4", features = [
-    "postgres",
-    "postgres_backend",
-    "uuid",
-] }
-serde = { version = "1.0", features = ["derive"] }
-deadpool-diesel = { version = "0.5.0", features = ["postgres", "serde"] }
 diesel_migrations = "2.1.0"
-testcontainers-modules = { version = "0.3.4", features = ["postgres"] }
+
+[dependencies.async-trait]
+version = "0.1.77"
+
+[dependencies.deadpool-diesel]
+version = "0.5.0"
+features = ["postgres", "serde"]
+
+[dependencies.diesel]
+version = "2.1.4"
+features = ["postgres", "postgres_backend", "uuid"]
+
+[dependencies.rust_core]
+path = "../core"
+
+[dependencies.serde]
+version = "1.0"
+features = ["derive"]
+
+[dependencies.testcontainers-modules]
+version = "0.3.4"
+features = ["postgres"]
+
+[dependencies.tokio]
+version = "1.36.0"
+features = ["full"]
+
+[lib]
+path = "src/lib.rs"
+name = "adapter"
+test = true
+doctest = true
+bench = true
+doc = true
+plugin = false
+proc-macro = false
+harness = true
+edition = "2021"
+required-features = []
+crate-type = ["rlib"]

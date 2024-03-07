@@ -1,27 +1,112 @@
+bench = []
+example = []
+
+[[bin]]
+path = "src/main.rs"
+name = "cli"
+test = true
+doctest = true
+bench = true
+doc = true
+plugin = false
+proc-macro = false
+harness = true
+edition = "2021"
+required-features = []
+
+[[test]]
+path = "tests/mod.rs"
+name = "mod"
+test = true
+doctest = true
+bench = true
+doc = true
+plugin = false
+proc-macro = false
+harness = true
+edition = "2021"
+required-features = []
+
+[[test]]
+path = "tests/questions_router_test.rs"
+name = "questions_router_test"
+test = true
+doctest = true
+bench = true
+doc = true
+plugin = false
+proc-macro = false
+harness = true
+edition = "2021"
+required-features = []
+
 [package]
 name = "cli"
-version = "0.1.0"
 edition = "2021"
+version = "0.0.1"
+build = "build.rs"
+autobins = true
+autoexamples = true
+autotests = true
+autobenches = true
 
 [dependencies]
-warp = "0.3.6"
-tokio = { version = "1.36.0", features = ["full"] }
-serde = { version = "1.0", features = ["derive"] }
-readonly = "0.2.12"
-deadpool-diesel = { version = "0.5.0", features = ["postgres", "serde"] }
-clap = { version = "4.4.7", features = ["derive"] }
-tracing = "0.1"
-opentelemetry = { version = "0.22.0" }
-openssl = { version = "0.10.63" }
-diesel = { version = "2.1.0", features = [
-    "postgres",
-    "postgres_backend",
-    "uuid",
-] }
-adapter = { path = "../adapter" }
-rust_core = { path = "../core" }
-common = { path = "../common" }
-serde_json = "1.0"
-testcontainers-modules = { version = "0.3.4", features = ["postgres"] }
-rand = "0.8.4"
 diesel_migrations = "2.1.0"
+rand = "0.8.4"
+readonly = "0.2.12"
+serde_json = "1.0"
+tracing = "0.1"
+warp = "0.3.6"
+
+[dependencies.adapter]
+path = "../adapter"
+
+[dependencies.clap]
+version = "4.4.7"
+features = ["derive"]
+
+[dependencies.common]
+path = "../common"
+
+[dependencies.deadpool-diesel]
+version = "0.5.0"
+features = ["postgres", "serde"]
+
+[dependencies.diesel]
+version = "2.1.0"
+features = ["postgres", "postgres_backend", "uuid"]
+
+[dependencies.openssl]
+version = "0.10.64"
+
+[dependencies.opentelemetry]
+version = "0.22.0"
+
+[dependencies.rust_core]
+path = "../core"
+
+[dependencies.serde]
+version = "1.0"
+features = ["derive"]
+
+[dependencies.testcontainers-modules]
+version = "0.3.5"
+features = ["postgres"]
+
+[dependencies.tokio]
+version = "1.36.0"
+features = ["full"]
+
+[lib]
+path = "src/lib.rs"
+name = "cli"
+test = true
+doctest = true
+bench = true
+doc = true
+plugin = false
+proc-macro = false
+harness = true
+edition = "2021"
+required-features = []
+crate-type = ["rlib"]
