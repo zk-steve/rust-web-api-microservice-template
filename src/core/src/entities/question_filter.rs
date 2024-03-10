@@ -1,8 +1,9 @@
 use std::collections::HashMap;
+use std::convert::TryFrom;
 
 use serde::{Deserialize, Serialize};
 
-use crate::common::errors::Error;
+use crate::common::errors::CoreError;
 use crate::entities::filter_entity::FilterEntity;
 use crate::entities::pagination_entity::PaginationEntity;
 
@@ -13,39 +14,17 @@ pub struct QuestionFilter {
     pub pagination: PaginationEntity,
 }
 
-impl QuestionFilter {
-    /// Constructs a `QuestionFilter` from query parameters.
-    ///
-    /// # Arguments
-    ///
-    /// * `query` - A HashMap containing query parameters.
-    ///
-    /// # Returns
-    ///
-    /// A Result containing the constructed `QuestionFilter` or an `Error` if parsing fails.
-    ///
-    /// # Example
-    ///
-    /// ```rust
-    /// use std::collections::HashMap;
-    /// use rust_core::entities::question_filter::QuestionFilter;
-    ///
-    /// let mut query_params = HashMap::new();
-    /// query_params.insert("start".to_string(), "0".to_string());
-    /// query_params.insert("end".to_string(), "10".to_string());
-    ///
-    /// match QuestionFilter::from_query(&query_params) {
-    ///     Ok(question_filter) => {
-    ///         println!("Parsed question filter: {:?}", question_filter);
-    ///     }
-    ///     Err(err) => {
-    ///         eprintln!("Failed to parse question filter: {:?}", err);
-    ///     }
-    /// }
-    /// ```
-    pub fn from_query(query: &HashMap<String, String>) -> Result<Self, Error> {
+/// Implementation of the `TryFrom` trait to convert a HashMap into a `QuestionFilter`.
+///
+/// This implementation allows converting a HashMap containing query parameters into a `QuestionFilter`.
+/// It attempts to parse the pagination parameters from the HashMap and constructs a `QuestionFilter`
+/// instance. If parsing fails for any reason, it returns a `CoreError`.
+impl TryFrom<HashMap<String, String>> for QuestionFilter {
+    type Error = CoreError;
+
+    fn try_from(query: HashMap<String, String>) -> Result<Self, CoreError> {
         Ok(QuestionFilter {
-            pagination: PaginationEntity::from_query(query)?,
+            pagination: PaginationEntity::try_from(query)?,
         })
     }
 }
@@ -63,7 +42,7 @@ mod tests {
         query_params_1.insert("start".to_string(), "0".to_string());
         query_params_1.insert("end".to_string(), "10".to_string());
 
-        match QuestionFilter::from_query(&query_params_1) {
+        match QuestionFilter::try_from(query_params_1) {
             Ok(question_filter) => {
                 assert_eq!(question_filter.pagination.start, 0);
                 assert_eq!(question_filter.pagination.end, 10);
@@ -81,14 +60,14 @@ mod tests {
         query_params_2.insert("start".to_string(), "asd".to_string());
         query_params_2.insert("end".to_string(), "10".to_string());
 
-        match QuestionFilter::from_query(&query_params_2) {
+        match QuestionFilter::try_from(query_params_2) {
             Ok(_) => {
                 panic!("Expected an error, but got Ok");
             }
             Err(err) => match err {
-                Error::ParseError(_) => {}
+                CoreError::ParseError(_) => {}
                 _ => {
-                    panic!("Expected MissingParameters error, but got {:?}", err);
+                    panic!("Expected ParseError error, but got {:?}", err);
                 }
             },
         }

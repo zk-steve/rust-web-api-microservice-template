@@ -1,5 +1,6 @@
 service_name = "rust-api-server"
 exporter_endpoint = "http://localhost:7281"
+gpt_answer_service_url = "grpc://0.0.0.0:50051"
 
 [db]
 [[inmemory]]

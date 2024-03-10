@@ -12,7 +12,9 @@ use common::options::{default_log, Log};
 pub struct Options {
     /// Configuration for the server.
     pub server: Server,
-    /// Specifies the backend database will be used.
+    /// URL for the GPT Answer gRPC client.
+    pub gpt_answer_service_url: String,
+    /// Specifies the configuration of database will be connected.
     pub db: Database,
     /// The endpoint for the exporter.
     pub exporter_endpoint: String,

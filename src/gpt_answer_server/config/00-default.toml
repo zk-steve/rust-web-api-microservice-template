@@ -1,0 +1,3 @@
+service_name = "rust-grpc-server"
+exporter_endpoint = "http://localhost:7281"
+server_endpoint = "0.0.0.0:50051"

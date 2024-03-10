@@ -1,35 +1,51 @@
 use std::sync::Arc;
-
 use warp::http::Method;
 use warp::{Filter, Rejection, Reply};
 
+use adapter::repositories::grpc::gpt_answer_client::GptAnswerClient;
 use rust_core::ports::question::QuestionPort;
 
 use crate::controllers::question::{
-    add_question, delete_question, get_question, get_questions, update_question,
+    add_question, delete_question, get_question, get_question_answer, get_questions,
+    update_question,
 };
 use crate::errors::return_error;
 
 /// Router for handling HTTP requests related to questions.
 pub struct Router {
     question_port: Arc<dyn QuestionPort + Send + Sync + 'static>,
+    gpt_answer_service_url: Arc<String>,
 }
 
 impl Router {
     /// Creates a new Router instance with the specified QuestionPort.
-    pub fn new(question_port: Arc<dyn QuestionPort + Send + Sync + 'static>) -> Self {
+    pub fn new(
+        question_port: Arc<dyn QuestionPort + Send + Sync + 'static>,
+        gpt_answer_service_url: Arc<String>,
+    ) -> Self {
         Router {
             question_port: question_port.clone(),
+            gpt_answer_service_url: gpt_answer_service_url.clone(),
         }
     }
 
     /// Configures and returns the Warp filter for handling HTTP requests.
-    pub fn routes(self) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
+    pub async fn routes(self) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
         let store_filter = warp::any().map(move || self.question_port.clone());
+
+        let gpt_answer_client = GptAnswerClient::init(self.gpt_answer_service_url.to_string())
+            .await
+            .map_err(|err| {
+                tracing::error!("Failed to init GPT answer service: {:?}", err);
+                err
+            })
+            .unwrap();
+
         let cors = warp::cors()
             .allow_any_origin()
             .allow_header("content-type")
             .allow_methods(&[Method::PUT, Method::DELETE, Method::GET, Method::POST]);
+
         let get_questions = warp::get()
             .and(warp::path("questions"))
             .and(warp::path::end())
@@ -66,12 +82,21 @@ impl Router {
             .and(warp::path::end())
             .and_then(delete_question);
 
+        let get_question_answer = warp::get()
+            .and(warp::path("questions"))
+            .and(store_filter.clone())
+            .and(warp::any().map(move || gpt_answer_client.clone()))
+            .and(warp::path::param::<String>())
+            .and(warp::path("answer"))
+            .and_then(get_question_answer);
+
         get_questions
             .with(cors)
             .or(get_question)
             .or(delete_question)
             .or(update_question)
             .or(add_question)
+            .or(get_question_answer)
             .with(warp::trace::request())
             .recover(return_error)
     }
