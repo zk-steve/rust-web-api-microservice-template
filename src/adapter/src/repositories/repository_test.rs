@@ -51,7 +51,7 @@ mod tests {
         query_params.insert("start".to_string(), "0".to_string());
         query_params.insert("end".to_string(), "10".to_string());
 
-        let pagination = match PaginationEntity::from_query(&query_params) {
+        let pagination = match PaginationEntity::try_from(query_params) {
             Ok(pagination_entity) => pagination_entity,
             Err(err) => {
                 panic!("Failed to parse pagination entity: {:?}", err);

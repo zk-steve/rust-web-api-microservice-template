@@ -30,8 +30,10 @@ mod tests {
     where
         T: QuestionPort + Send + Sync + 'static,
     {
-        let router = Router::new(question_port);
-        let routers = router.routes();
+        let gpt_answer_service_url = "grpc://0.0.0.0:50051".to_string();
+
+        let router = Router::new(question_port, gpt_answer_service_url.into());
+        let routers = router.routes().await;
 
         let raw_question_id: String = rand::thread_rng().gen_range(1..=1000).to_string();
         let question_id = QuestionId::from_str(&raw_question_id.clone()).unwrap();

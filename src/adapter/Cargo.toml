@@ -12,8 +12,14 @@ autoexamples = true
 autotests = true
 autobenches = true
 
-[dependencies]
-diesel_migrations = "2.1.0"
+[dependencies.rust_core]
+path = "../core"
+
+[dependencies.common]
+path = "../common"
+
+[dependencies.diesel_migrations]
+version = "2.1.0"
 
 [dependencies.async-trait]
 version = "0.1.77"
@@ -26,9 +32,6 @@ features = ["postgres", "serde"]
 version = "2.1.4"
 features = ["postgres", "postgres_backend", "uuid"]
 
-[dependencies.rust_core]
-path = "../core"
-
 [dependencies.serde]
 version = "1.0"
 features = ["derive"]
@@ -40,3 +43,9 @@ features = ["postgres"]
 [dependencies.tokio]
 version = "1.36.0"
 features = ["full"]
+
+[dependencies.anyhow]
+version = "1.0.80"
+
+[dependencies.tonic]
+version = "0.11.0"

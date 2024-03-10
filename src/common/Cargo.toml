@@ -11,12 +11,20 @@ autoexamples = true
 autotests = true
 autobenches = true
 
-[dependencies]
-config = "0.14.0"
-glob = "0.3.1"
-tracing = "0.1"
-tracing-bunyan-formatter = "0.3.9"
-tracing-opentelemetry = "0.23.0"
+[dependencies.config]
+version = "0.14.0"
+
+[dependencies.glob]
+version = "0.3.1"
+
+[dependencies.tracing]
+version = "0.1"
+
+[dependencies.tracing-bunyan-formatter]
+version = "0.3.9"
+
+[dependencies.tracing-opentelemetry]
+version = "0.23.0"
 
 [dependencies.opentelemetry]
 version = "0.22.0"
@@ -39,3 +47,15 @@ features = ["derive"]
 [dependencies.tracing-subscriber]
 version = "0.3.18"
 features = ["env-filter"]
+
+[dependencies.tonic]
+version = "0.11.0"
+
+[dependencies.prost]
+version = "0.12.3"
+
+[build-dependencies.tonic-build]
+version = "0.11.0"
+
+[build-dependencies.glob]
+version = "0.3.1"

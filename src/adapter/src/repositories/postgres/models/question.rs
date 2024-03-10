@@ -1,9 +1,10 @@
+use std::io::{Error, ErrorKind};
 use std::time::SystemTime;
 
 use diesel::{AsChangeset, Identifiable, Insertable, Queryable, Selectable};
 use serde::Serialize;
 
-use rust_core::entities::question::QuestionEntity;
+use rust_core::entities::question::{QuestionEntity, QuestionId};
 
 #[derive(Debug, Queryable, Serialize, Selectable, Insertable, AsChangeset, Identifiable)]
 #[diesel(table_name = super::super::schema::questions)]
@@ -20,20 +21,30 @@ pub struct QuestionModel {
     pub created_on: SystemTime,
 }
 
-impl QuestionModel {
-    pub fn from(entity: QuestionEntity) -> Self {
-        QuestionModel {
-            id: entity.id.to_string().parse().unwrap(),
+impl TryFrom<QuestionEntity> for QuestionModel {
+    type Error = Error;
+
+    fn try_from(entity: QuestionEntity) -> Result<QuestionModel, Self::Error> {
+        let id = entity
+            .id
+            .0
+            .parse()
+            .map_err(|_| Error::new(ErrorKind::InvalidInput, "Invalid ID"))?;
+
+        Ok(QuestionModel {
+            id,
             title: entity.title,
             content: entity.content,
             tags: entity.tags.map(|v| v.into_iter().map(Some).collect()),
             created_on: SystemTime::now(),
-        }
+        })
     }
+}
 
-    pub fn to_entity(self) -> QuestionEntity {
+impl Into<QuestionEntity> for QuestionModel {
+    fn into(self) -> QuestionEntity {
         QuestionEntity {
-            id: self.id.to_string().parse().unwrap(),
+            id: QuestionId(self.id.to_string()),
             title: self.title,
             content: self.content,
             tags: self.tags.map(|v| v.into_iter().flatten().collect()),

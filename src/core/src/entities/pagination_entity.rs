@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
-use crate::common::errors::Error;
+use crate::common::errors::CoreError;
 
 /// Represents pagination parameters.
 #[derive(Debug, Serialize, Deserialize)]
@@ -15,47 +15,23 @@ pub struct PaginationEntity {
     pub sort: Option<Vec<String>>,
 }
 
-impl PaginationEntity {
-    /// Constructs a `PaginationEntity` from query parameters.
-    ///
-    /// # Arguments
-    ///
-    /// * `query` - A HashMap containing query parameters.
-    ///
-    /// # Returns
-    ///
-    /// A Result containing the constructed `PaginationEntity` or an `Error` if parsing fails.
-    ///
-    /// # Example
-    ///
-    /// ```rust
-    /// use std::collections::HashMap;
-    /// use rust_core::entities::pagination_entity::PaginationEntity;
-    ///
-    /// let mut query_params = HashMap::new();
-    /// query_params.insert("start".to_string(), "0".to_string());
-    /// query_params.insert("end".to_string(), "10".to_string());
-    ///
-    /// match PaginationEntity::from_query(&query_params) {
-    ///     Ok(pagination_entity) => {
-    ///         println!("Parsed pagination entity: {:?}", pagination_entity);
-    ///     }
-    ///     Err(err) => {
-    ///         eprintln!("Failed to parse pagination entity: {:?}", err);
-    ///     }
-    /// }
-    /// ```
-    pub fn from_query(query: &HashMap<String, String>) -> Result<Self, Error> {
+/// Implementation of the `TryFrom` trait to convert a HashMap into a `PaginationEntity`.
+///
+/// This implementation allows converting a HashMap containing query parameters into a `PaginationEntity`.
+/// It attempts to parse the start and end pagination parameters from the HashMap and constructs a `PaginationEntity`
+/// instance. If parsing fails for any reason, it returns a `CoreError`.
+impl TryFrom<HashMap<String, String>> for PaginationEntity {
+    type Error = CoreError;
+
+    fn try_from(query: HashMap<String, String>) -> Result<Self, CoreError> {
         let start = query
             .get("start")
             .unwrap_or(&"0".to_string())
-            .parse::<usize>()
-            .map_err(Error::ParseError)?;
+            .parse::<usize>()?;
         let end = query
             .get("end")
             .unwrap_or(&"10".to_string())
-            .parse::<usize>()
-            .map_err(Error::ParseError)?;
+            .parse::<usize>()?;
         Ok(PaginationEntity {
             start,
             end,
@@ -75,7 +51,7 @@ mod tests {
         query_params_1.insert("start".to_string(), "0".to_string());
         query_params_1.insert("end".to_string(), "10".to_string());
 
-        match PaginationEntity::from_query(&query_params_1) {
+        match PaginationEntity::try_from(query_params_1) {
             Ok(pagination_entity) => {
                 assert_eq!(pagination_entity.start, 0);
                 assert_eq!(pagination_entity.end, 10);
@@ -93,13 +69,12 @@ mod tests {
         let mut query_params_2 = HashMap::new();
         query_params_2.insert("start".to_string(), "abs".to_string());
         query_params_2.insert("end".to_string(), "10".to_string());
-
-        match PaginationEntity::from_query(&query_params_2) {
+        match PaginationEntity::try_from(query_params_2) {
             Ok(_) => {
                 panic!("Expected an error, but got Ok");
             }
             Err(err) => match err {
-                Error::ParseError(_) => {}
+                CoreError::ParseError(_) => {}
                 _ => {
                     panic!("Expected ParseError error, but got {:?}", err);
                 }
