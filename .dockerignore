@@ -15,7 +15,4 @@ Cargo.toml.orig
 *.rmeta
 *.d
 
-# Ignore system and hidden files
-**/.*
-
 Dockerfile
