@@ -132,7 +132,7 @@ pub async fn update_question(
 #[instrument(level = "info", skip(question_port, gpt_answer_client))]
 pub async fn get_question_answer(
     question_port: Arc<dyn QuestionPort + Send + Sync>,
-    mut gpt_answer_client: GptAnswerClient,
+    gpt_answer_client: Arc<GptAnswerClient>,
     id: String,
 ) -> Result<impl Reply, Rejection> {
     let question_id = QuestionId::from_str(&id).map_err(WarpError::from)?;
@@ -141,8 +141,6 @@ pub async fn get_question_answer(
         .get(&question_id)
         .await
         .map_err(WarpError::from)?;
-
-    gpt_answer_client.connect().await.map_err(WarpError::from)?;
 
     let answer = gpt_answer_client
         .get_answer(&question.content)

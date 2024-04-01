@@ -1,18 +1,20 @@
-use std::net::{Ipv4Addr, SocketAddrV4};
-use std::str::FromStr;
-use std::sync::Arc;
-
 #[cfg_attr(debug_assertions, allow(dead_code, unused_imports))]
 use openssl;
 #[rustfmt::skip]
 #[cfg_attr(debug_assertions, allow(dead_code, unused_imports))]
 use diesel;
+
+use std::net::{Ipv4Addr, SocketAddrV4};
+use std::str::FromStr;
+use std::sync::Arc;
+
 use clap::{Parser, Subcommand};
 use deadpool_diesel::postgres::Pool;
 use deadpool_diesel::{Manager, Runtime};
 use opentelemetry::global;
 use tracing::info;
 
+use adapter::repositories::grpc::gpt_answer_client::GptAnswerClient;
 use adapter::repositories::in_memory::question::QuestionInMemoryRepository;
 use adapter::repositories::postgres::question_db::QuestionDBRepository;
 use cli::options::Options;
@@ -48,8 +50,8 @@ async fn main() {
         options.log.level.as_str(),
     );
 
-    let warp_server = tokio::spawn(run_warp_server(options));
-    tokio::try_join!(warp_server).expect("Failed to run servers");
+    let server = tokio::spawn(serve(options));
+    tokio::try_join!(server).expect("Failed to run servers");
 
     global::shutdown_tracer_provider();
 }
@@ -74,7 +76,7 @@ enum Commands {
     Config,
 }
 
-pub async fn run_warp_server(options: Options) {
+pub async fn serve(options: Options) {
     let question_port: Arc<dyn QuestionPort + Send + Sync> = if options.db.in_memory.is_some() {
         info!("Using in-memory database");
         Arc::new(QuestionInMemoryRepository::new())
@@ -92,13 +94,15 @@ pub async fn run_warp_server(options: Options) {
         Arc::new(QuestionInMemoryRepository::new())
     };
 
-    let grpc_client = options.gpt_answer_service_url.clone();
-    let router = Router::new(question_port, grpc_client.into());
-    let routers = router.routes().await;
+    let gpt_answer_client =
+        Arc::new(GptAnswerClient::new(options.gpt_answer_service_url.to_string()).unwrap());
+
+    let router = Router::new(question_port, gpt_answer_client);
+    let routes = router.routes();
     let address = SocketAddrV4::new(
         Ipv4Addr::from_str(options.server.url.as_str()).unwrap(),
         options.server.port,
     );
 
-    warp::serve(routers).run(address).await
+    warp::serve(routes).run(address).await
 }

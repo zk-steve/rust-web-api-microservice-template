@@ -1,4 +1,5 @@
 use std::sync::Arc;
+
 use warp::http::Method;
 use warp::{Filter, Rejection, Reply};
 
@@ -14,32 +15,24 @@ use crate::errors::return_error;
 /// Router for handling HTTP requests related to questions.
 pub struct Router {
     question_port: Arc<dyn QuestionPort + Send + Sync + 'static>,
-    gpt_answer_service_url: Arc<String>,
+    gpt_answer_client: Arc<GptAnswerClient>,
 }
 
 impl Router {
     /// Creates a new Router instance with the specified QuestionPort.
     pub fn new(
         question_port: Arc<dyn QuestionPort + Send + Sync + 'static>,
-        gpt_answer_service_url: Arc<String>,
+        gpt_answer_client: Arc<GptAnswerClient>,
     ) -> Self {
         Router {
             question_port: question_port.clone(),
-            gpt_answer_service_url: gpt_answer_service_url.clone(),
+            gpt_answer_client,
         }
     }
 
     /// Configures and returns the Warp filter for handling HTTP requests.
-    pub async fn routes(self) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
+    pub fn routes(self) -> impl Filter<Extract = impl Reply, Error = Rejection> + Clone {
         let store_filter = warp::any().map(move || self.question_port.clone());
-
-        let gpt_answer_client = GptAnswerClient::init(self.gpt_answer_service_url.to_string())
-            .await
-            .map_err(|err| {
-                tracing::error!("Failed to init GPT answer service: {:?}", err);
-                err
-            })
-            .unwrap();
 
         let cors = warp::cors()
             .allow_any_origin()
@@ -85,7 +78,7 @@ impl Router {
         let get_question_answer = warp::get()
             .and(warp::path("questions"))
             .and(store_filter.clone())
-            .and(warp::any().map(move || gpt_answer_client.clone()))
+            .and(warp::any().map(move || self.gpt_answer_client.clone()))
             .and(warp::path::param::<String>())
             .and(warp::path("answer"))
             .and_then(get_question_answer);

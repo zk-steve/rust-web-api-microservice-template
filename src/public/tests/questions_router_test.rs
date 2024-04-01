@@ -12,6 +12,7 @@ mod tests {
     use warp::test::request;
 
     use adapter::repositories::{
+        grpc::gpt_answer_client::GptAnswerClient,
         in_memory::question::QuestionInMemoryRepository,
         postgres::question_db::{QuestionDBRepository, MIGRATIONS},
     };
@@ -32,8 +33,12 @@ mod tests {
     {
         let gpt_answer_service_url = "grpc://0.0.0.0:50051".to_string();
 
-        let router = Router::new(question_port, gpt_answer_service_url.into());
-        let routers = router.routes().await;
+        let gpt_answer_client: Arc<
+            adapter::repositories::grpc::gpt_answer_client::GptAnswerClient,
+        > = Arc::new(GptAnswerClient::new(gpt_answer_service_url.to_string()).unwrap());
+
+        let router = Router::new(question_port, gpt_answer_client);
+        let routers = router.routes();
 
         let raw_question_id: String = rand::thread_rng().gen_range(1..=1000).to_string();
         let question_id = QuestionId::from_str(&raw_question_id.clone()).unwrap();
