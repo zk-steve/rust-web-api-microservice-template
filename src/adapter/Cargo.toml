@@ -25,7 +25,7 @@ version = "2.1.0"
 version = "0.1.77"
 
 [dependencies.deadpool-diesel]
-version = "0.5.0"
+version = "0.6.0"
 features = ["postgres", "serde"]
 
 [dependencies.diesel]
