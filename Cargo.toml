@@ -1,3 +1,9 @@
 [workspace]
-members = ["src/public", "src/gpt_answer_server"]
+members = [
+    "src/adapter",
+    "src/common",
+    "src/core",
+    "src/gpt_answer_server",
+    "src/public",
+]
 resolver = "2"
