@@ -1,3 +1,7 @@
 service_name = "rust-grpc-server"
 exporter_endpoint = "http://localhost:7281"
 server_endpoint = "0.0.0.0:50051"
+
+[redis]
+redis_host = "localhost"
+redis_port = 6379

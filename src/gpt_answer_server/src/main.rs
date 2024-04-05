@@ -5,6 +5,7 @@ use tonic::transport::Server;
 use common::grpc::gpt_answer::gpt_answer::gpt_answer_service_server::GptAnswerServiceServer;
 use common::loggers::telemetry::init_telemetry;
 use common::options::parse_options;
+use common::redis::redis::Redis;
 use gpt_answer_server::controllers::gpt_answer::GptAnswerServiceImpl;
 use gpt_answer_server::options::Options;
 
@@ -12,7 +13,15 @@ pub async fn serve(options: Options) {
     let address = options.server_endpoint.parse().unwrap();
     println!("Starting GPT Answer server at {}", options.server_endpoint);
 
-    let gpt_answer_service = GptAnswerServiceImpl::new("dummy_prop".to_string());
+    let redis_client = Redis::new(&options.redis.host, options.redis.port)
+        .await
+        .map_err(|err| {
+            tracing::error!("Failed to connect to Redis: {}", err);
+            err
+        })
+        .unwrap();
+
+    let gpt_answer_service = GptAnswerServiceImpl::new(redis_client);
     Server::builder()
         .add_service(GptAnswerServiceServer::new(gpt_answer_service))
         .serve(address)

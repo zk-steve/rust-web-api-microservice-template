@@ -356,12 +356,15 @@ version = "0.0.1"
 dependencies = [
  "config",
  "glob",
+ "once_cell",
  "opentelemetry",
  "opentelemetry-otlp",
  "opentelemetry-semantic-conventions",
  "opentelemetry_sdk",
  "prost",
+ "redis-async",
  "serde",
+ "tokio",
  "tonic",
  "tonic-build",
  "tracing",
@@ -1718,6 +1721,23 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.57",
+]
+
+[[package]]
+name = "redis-async"
+version = "0.17.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "48732d38d64794df698e1f6410d1650088ee9bf7cea405fbb0adb24189217a8f"
+dependencies = [
+ "bytes",
+ "futures-channel",
+ "futures-sink",
+ "futures-util",
+ "log",
+ "pin-project",
+ "socket2",
+ "tokio",
+ "tokio-util",
 ]
 
 [[package]]

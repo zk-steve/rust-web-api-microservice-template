@@ -54,6 +54,15 @@ version = "0.11.0"
 [dependencies.prost]
 version = "0.12.3"
 
+[dependencies.once_cell]
+version = "1.19.0"
+
+[dependencies.tokio]
+version = "1.36.0"
+
+[dependencies.redis-async]
+version = "0.17.1"
+
 [build-dependencies.tonic-build]
 version = "0.11.0"
 
