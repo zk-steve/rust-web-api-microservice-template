@@ -23,4 +23,4 @@ features = ["derive"]
 version = "1.0.57"
 
 [dependencies.anyhow]
-version = "1.0.80"
+version = "1.0.82"
