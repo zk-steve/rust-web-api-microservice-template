@@ -13,7 +13,7 @@ autotests = true
 autobenches = true
 
 [dependencies.async-trait]
-version = "0.1.77"
+version = "0.1.80"
 
 [dependencies.serde]
 version = "1.0"
