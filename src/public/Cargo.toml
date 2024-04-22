@@ -108,7 +108,7 @@ version = "1.36.0"
 features = ["full"]
 
 [dependencies.thiserror]
-version = "1.0.57"
+version = "1.0.59"
 
 [dependencies.anyhow]
 version = "1.0.82"
