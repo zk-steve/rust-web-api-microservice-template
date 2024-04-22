@@ -86,7 +86,7 @@ version = "0.6.0"
 features = ["postgres", "serde"]
 
 [dependencies.diesel]
-version = "2.1.0"
+version = "2.1.6"
 features = ["postgres", "postgres_backend", "uuid"]
 
 [dependencies.openssl]
