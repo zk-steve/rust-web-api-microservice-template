@@ -362,6 +362,7 @@ dependencies = [
  "opentelemetry_sdk",
  "prost",
  "serde",
+ "tokio",
  "tonic",
  "tonic-build",
  "tracing",

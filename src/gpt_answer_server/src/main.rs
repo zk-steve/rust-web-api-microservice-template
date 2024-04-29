@@ -1,21 +1,29 @@
 use clap::{Parser, Subcommand};
 use opentelemetry::global;
+use tokio::signal;
+use tokio::sync::oneshot;
+use tokio::sync::oneshot::Receiver;
 use tonic::transport::Server;
+use tracing::info;
 
 use common::grpc::gpt_answer::gpt_answer::gpt_answer_service_server::GptAnswerServiceServer;
+use common::kill_signals;
 use common::loggers::telemetry::init_telemetry;
 use common::options::parse_options;
 use gpt_answer_server::controllers::gpt_answer::GptAnswerServiceImpl;
 use gpt_answer_server::options::Options;
 
-pub async fn serve(options: Options) {
+pub async fn serve(options: Options, rx: Receiver<()>) {
     let address = options.server_endpoint.parse().unwrap();
     println!("Starting GPT Answer server at {}", options.server_endpoint);
 
     let gpt_answer_service = GptAnswerServiceImpl::new("dummy_prop".to_string());
     Server::builder()
         .add_service(GptAnswerServiceServer::new(gpt_answer_service))
-        .serve(address)
+        .serve_with_shutdown(address, async {
+            rx.await.ok();
+            info!("GRPC server shut down");
+        })
         .await
         .unwrap();
 }
@@ -47,11 +55,17 @@ async fn main() {
         options.log.level.as_str(),
     );
 
-    let server = tokio::spawn(serve(options));
+    let (tx, rx) = oneshot::channel();
+    let server = tokio::spawn(serve(options, rx));
 
-    tokio::try_join!(server).expect("Failed to run servers");
+    kill_signals::wait_for_kill_signals().await;
+
+    // Send the shutdown signal
+    let _ = tx.send(());
+    tokio::try_join!(server).expect("Failed to run server");
 
     global::shutdown_tracer_provider();
+    info!("Shutdown successfully!");
 }
 
 /// GPT Answer GRPC server.
