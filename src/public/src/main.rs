@@ -12,6 +12,9 @@ use clap::{Parser, Subcommand};
 use deadpool_diesel::postgres::Pool;
 use deadpool_diesel::{Manager, Runtime};
 use opentelemetry::global;
+use tokio::signal;
+use tokio::sync::oneshot;
+use tokio::sync::oneshot::Receiver;
 use tracing::info;
 
 use adapter::repositories::grpc::gpt_answer_client::GptAnswerClient;
@@ -19,6 +22,7 @@ use adapter::repositories::in_memory::question::QuestionInMemoryRepository;
 use adapter::repositories::postgres::question_db::QuestionDBRepository;
 use cli::options::Options;
 use cli::router::Router;
+use common::kill_signals;
 use common::loggers::telemetry::init_telemetry;
 use common::options::parse_options;
 use rust_core::ports::question::QuestionPort;
@@ -50,10 +54,19 @@ async fn main() {
         options.log.level.as_str(),
     );
 
-    let server = tokio::spawn(serve(options));
-    tokio::try_join!(server).expect("Failed to run servers");
+    let (tx, rx) = oneshot::channel();
+    let server = tokio::spawn(serve(options, rx));
+
+    kill_signals::wait_for_kill_signals().await;
+
+    // Send the shutdown signal
+    let _ = tx.send(());
+
+    // Wait for the server to finish shutting down
+    tokio::try_join!(server).expect("Failed to run server");
 
     global::shutdown_tracer_provider();
+    info!("Shutdown successfully!");
 }
 
 /// Simple REST server.
@@ -76,7 +89,7 @@ enum Commands {
     Config,
 }
 
-pub async fn serve(options: Options) {
+pub async fn serve(options: Options, rx: Receiver<()>) {
     let question_port: Arc<dyn QuestionPort + Send + Sync> = if options.db.in_memory.is_some() {
         info!("Using in-memory database");
         Arc::new(QuestionInMemoryRepository::new())
@@ -103,6 +116,10 @@ pub async fn serve(options: Options) {
         Ipv4Addr::from_str(options.server.url.as_str()).unwrap(),
         options.server.port,
     );
+    let (_, server) = warp::serve(routes).bind_with_graceful_shutdown(address, async {
+        rx.await.ok();
+        info!("Warp server shut down");
+    });
 
-    warp::serve(routes).run(address).await
+    server.await;
 }
