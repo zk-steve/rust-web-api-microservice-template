@@ -7,7 +7,8 @@ mod tests {
     };
     use diesel_migrations::MigrationHarness;
     use rand::Rng;
-    use testcontainers_modules::{postgres::Postgres, testcontainers::clients::Cli};
+    use testcontainers_modules::postgres;
+    use testcontainers_modules::testcontainers::runners::AsyncRunner;
     use warp::http::StatusCode;
     use warp::test::request;
 
@@ -177,12 +178,11 @@ mod tests {
     #[tokio::test]
     async fn questions_router_postgres_test() {
         // Set up a postgres database question port for testing
-        let docker = Cli::default();
-        let postgres_instance = docker.run(Postgres::default());
+        let postgres_instance = postgres::Postgres::default().start().await;
 
         let database_url = format!(
             "postgres://postgres:postgres@127.0.0.1:{}/postgres",
-            postgres_instance.get_host_port_ipv4(5432)
+            postgres_instance.get_host_port_ipv4(5432).await
         );
         let database_config = DatabaseConfig {
             url: database_url.clone(),
