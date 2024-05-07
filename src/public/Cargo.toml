@@ -111,7 +111,7 @@ features = ["full"]
 version = "1.0.59"
 
 [dependencies.anyhow]
-version = "1.0.82"
+version = "1.0.83"
 
 [lib]
 path = "src/lib.rs"

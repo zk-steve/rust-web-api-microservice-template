@@ -45,7 +45,7 @@ version = "1.36.0"
 features = ["full"]
 
 [dependencies.anyhow]
-version = "1.0.82"
+version = "1.0.83"
 
 [dependencies.tonic]
 version = "0.11.0"
