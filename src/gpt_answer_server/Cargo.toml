@@ -18,6 +18,9 @@ path = "../core"
 [dependencies.common]
 path = "../common"
 
+[dependencies.adapter]
+path = "../adapter"
+
 [dependencies.tonic]
 version = "0.11.0"
 

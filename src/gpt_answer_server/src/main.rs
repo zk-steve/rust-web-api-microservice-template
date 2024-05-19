@@ -1,11 +1,13 @@
+use std::sync::Arc;
+
 use clap::{Parser, Subcommand};
 use opentelemetry::global;
-use tokio::signal;
 use tokio::sync::oneshot;
 use tokio::sync::oneshot::Receiver;
 use tonic::transport::Server;
 use tracing::info;
 
+use adapter::repositories::redis::cache::RedisCache;
 use common::grpc::gpt_answer::gpt_answer::gpt_answer_service_server::GptAnswerServiceServer;
 use common::kill_signals;
 use common::loggers::telemetry::init_telemetry;
@@ -17,7 +19,12 @@ pub async fn serve(options: Options, rx: Receiver<()>) {
     let address = options.server_endpoint.parse().unwrap();
     println!("Starting GPT Answer server at {}", options.server_endpoint);
 
-    let gpt_answer_service = GptAnswerServiceImpl::new("dummy_prop".to_string());
+    let cache = RedisCache::new(&options.redis.host, options.redis.port)
+        .await
+        .unwrap();
+
+    let gpt_answer_service = GptAnswerServiceImpl::new(Arc::new(cache));
+
     Server::builder()
         .add_service(GptAnswerServiceServer::new(gpt_answer_service))
         .serve_with_shutdown(address, async {

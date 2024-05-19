@@ -15,4 +15,5 @@ Cargo.toml.orig
 *.rmeta
 *.d
 
+deploy/
 Dockerfile

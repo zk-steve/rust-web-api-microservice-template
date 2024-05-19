@@ -101,7 +101,7 @@ features = ["derive"]
 
 [dependencies.testcontainers-modules]
 version = "0.4.3"
-features = ["postgres"]
+features = ["postgres", "redis"]
 
 [dependencies.tokio]
 version = "1.36.0"

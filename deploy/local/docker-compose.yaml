@@ -33,5 +33,13 @@ services:
       - postgres:/data/postgres
     ports:
       - "5432:5432"
+  redis:
+    image: redis:latest
+    restart: always
+    volumes:
+      - redis:/data
+    ports:
+      - "6379:6379"
 volumes:
   postgres:
+  redis:

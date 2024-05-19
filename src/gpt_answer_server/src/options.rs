@@ -15,7 +15,18 @@ pub struct Options {
     pub exporter_endpoint: String,
     /// The name of the service.
     pub service_name: String,
+    /// Configuration for redis.
+    pub redis: RedisConfig,
     /// Configuration for logging, including log level.
     #[serde(default = "default_log")]
     pub log: Log,
+}
+
+/// Represents redis configuration.
+#[derive(Debug, Deserialize, Clone)]
+pub struct RedisConfig {
+    /// Port number for the redis.
+    pub port: u16,
+    /// Host for the redis.
+    pub host: String,
 }
