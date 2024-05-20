@@ -1,5 +1,5 @@
 #[cfg(test)]
-mod tests {
+mod question_repository_tests {
     use std::collections::HashMap;
     use std::{str::FromStr, sync::Arc};
 
@@ -8,7 +8,7 @@ mod tests {
         Manager,
     };
     use diesel_migrations::MigrationHarness;
-    use testcontainers_modules::postgres;
+    use testcontainers_modules::postgres::Postgres;
     use testcontainers_modules::testcontainers::runners::AsyncRunner;
 
     use rust_core::{
@@ -90,7 +90,7 @@ mod tests {
     #[tokio::test]
     async fn question_postgres_repository_test() {
         // Set up a postgres database question port for testing
-        let postgres_instance = postgres::Postgres::default().start().await;
+        let postgres_instance = Postgres::default().start().await;
 
         let database_url = format!(
             "postgres://postgres:postgres@127.0.0.1:{}/postgres",
@@ -124,5 +124,74 @@ mod tests {
         let question_port = Arc::new(QuestionDBRepository::new(db_pool.clone()));
 
         test_question_repository(question_port).await;
+    }
+}
+#[cfg(test)]
+mod cache_repository_tests {
+    use std::time::Duration;
+
+    use testcontainers_modules::redis::Redis;
+    use testcontainers_modules::testcontainers::runners::AsyncRunner;
+    use tokio::time::sleep;
+
+    use rust_core::common::errors::CoreError;
+    use rust_core::ports::cache::CachePort;
+
+    use crate::repositories::{in_memory::cache::InMemoryCache, redis::cache::RedisCache};
+
+    async fn test_cache_operations<C: CachePort>(mut cache: C) {
+        let test_key = "key1";
+        let test_value = "value1";
+
+        // Test set operation for test_key
+        let set_result = cache.set(&test_key, &test_value, None).await;
+        assert!(set_result.is_ok());
+
+        // Verify that test_key is set and retrievable
+        let get_result = cache.get(&test_key).await;
+        assert_eq!(get_result.unwrap(), "value1".to_string());
+
+        // Test del operation for key test_key
+        let del_result = cache.del(&test_key).await;
+
+        // Verify that test_key is deleted
+        assert!(del_result.is_ok());
+
+        // Verify that test_key" is deleted and cannot retrievable
+        let get_result = cache.get(&test_key).await;
+        assert!(matches!(get_result, Err(CoreError::NotFound)));
+
+        // Test deleting a non-existing key
+        let del_result = cache.del("non_existing_key").await;
+        assert!(matches!(del_result, Err(CoreError::NotFound)));
+
+        // Test set operation for test_key with limit expiration time
+        let set_result = cache
+            .set(&test_key, &test_value, Some(Duration::from_secs(1)))
+            .await;
+        assert!(set_result.is_ok());
+
+        let set_result = cache.get(&test_key).await;
+        assert!(set_result.is_ok());
+
+        // Test get an expired key
+        sleep(Duration::from_secs(1)).await;
+        let get_result = cache.get(&test_key).await;
+        assert!(matches!(get_result, Err(CoreError::NotFound)));
+    }
+
+    #[tokio::test]
+    async fn test_in_memory_cache_operations() {
+        let cache = InMemoryCache::default();
+        test_cache_operations(cache).await;
+    }
+
+    #[tokio::test]
+    async fn test_redis_cache_operations() {
+        let redis_instance = Redis::default().start().await;
+        let host = "127.0.0.1";
+        let port = redis_instance.get_host_port_ipv4(6379).await;
+        let cache = RedisCache::new(host, port).await.unwrap();
+        test_cache_operations(cache).await;
     }
 }

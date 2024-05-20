@@ -20,16 +20,30 @@ COPY . .
 RUN cargo build --release --all
 RUN mv target/${CARGO_BUILD_TARGET}/release /out
 
-FROM scratch AS prod
+FROM alpine AS public-dev
 WORKDIR /user
 COPY src/public/config/00-default.toml 00-default.toml
-COPY --from=builder /out/cli /usr/local/bin/rust-server
-ENTRYPOINT ["/usr/local/bin/rust-server", "--config-path=*.toml"]
-
-FROM alpine AS dev
-WORKDIR /user
-COPY src/public/config/00-default.toml 00-default.toml
-COPY --from=builder /out/cli /usr/local/bin/rust-server
+COPY --from=builder /out/cli /usr/local/bin/rust-api-server
 COPY --from=bunyan /root/.cargo/bin/bunyan /usr/local/bin/
 ENTRYPOINT ["/bin/sh"]
-CMD ["-c", "/usr/local/bin/rust-server --config-path=*.toml | bunyan"]
+CMD ["-c", "/usr/local/bin/rust-api-server --config-path=*.toml | bunyan"]
+
+FROM alpine AS gpt-dev
+WORKDIR /user
+COPY src/gpt_answer_server/config/00-default.toml 00-default.toml
+COPY --from=builder /out/gpt_answer_server /usr/local/bin/rust-grpc-server
+COPY --from=bunyan /root/.cargo/bin/bunyan /usr/local/bin/
+ENTRYPOINT ["/bin/sh"]
+CMD ["-c", "/usr/local/bin/rust-grpc-server --config-path=*.toml | bunyan"]
+
+FROM scratch AS public-prod
+WORKDIR /user
+COPY src/public/config/00-default.toml 00-default.toml
+COPY --from=builder /out/cli /usr/local/bin/rust-api-server
+ENTRYPOINT ["/usr/local/bin/rust-api-server", "--config-path=*.toml"]
+
+FROM scratch AS gpt-prod
+WORKDIR /user
+COPY src/gpt_answer_server/config/00-default.toml 00-default.toml
+COPY --from=builder /out/gpt_answer_server /usr/local/bin/rust-grpc-server
+ENTRYPOINT ["/usr/local/bin/rust-grpc-server", "--config-path=*.toml"]

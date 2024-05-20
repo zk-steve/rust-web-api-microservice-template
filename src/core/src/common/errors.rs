@@ -16,4 +16,7 @@ pub enum CoreError {
 
     #[error("internal error {0}")]
     InternalError(#[from] Error),
+
+    #[error("unexpected response {0}")]
+    UnexpectedResponse(String),
 }

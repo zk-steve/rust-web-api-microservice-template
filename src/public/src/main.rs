@@ -12,7 +12,6 @@ use clap::{Parser, Subcommand};
 use deadpool_diesel::postgres::Pool;
 use deadpool_diesel::{Manager, Runtime};
 use opentelemetry::global;
-use tokio::signal;
 use tokio::sync::oneshot;
 use tokio::sync::oneshot::Receiver;
 use tracing::info;

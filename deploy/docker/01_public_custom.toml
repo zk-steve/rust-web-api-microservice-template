@@ -1,5 +1,6 @@
 service_name = "rust-api-server-docker"
 exporter_endpoint = "http://quickwit:7281"
+gpt_answer_service_url = "grpc://gpt_answer_server:50051"
 
 [server]
 url = "0.0.0.0"
