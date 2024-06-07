@@ -24,20 +24,20 @@ version = "0.1"
 version = "0.3.9"
 
 [dependencies.tracing-opentelemetry]
-version = "0.23.0"
+version = "0.24.0"
 
 [dependencies.opentelemetry]
-version = "0.22.0"
+version = "0.23.0"
 
 [dependencies.opentelemetry-otlp]
-version = "0.15.0"
+version = "0.16.0"
 features = ["tonic"]
 
 [dependencies.opentelemetry-semantic-conventions]
 version = "0.15.0"
 
 [dependencies.opentelemetry_sdk]
-version = "0.22.1"
+version = "0.23.0"
 features = ["rt-tokio"]
 
 [dependencies.serde]
