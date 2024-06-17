@@ -104,10 +104,10 @@ impl CachePort for RedisCache {
                         Err(CoreError::NotFound)
                     }
                 }
-                response => Err(CoreError::UnexpectedResponse(String::from(format!(
+                response => Err(CoreError::UnexpectedResponse(format!(
                     "Expect `RespValue::Integer` but found {:?}",
                     response
-                )))),
+                ))),
             })
     }
 }
