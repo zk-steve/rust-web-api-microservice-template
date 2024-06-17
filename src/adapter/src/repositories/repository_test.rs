@@ -90,11 +90,11 @@ mod question_repository_tests {
     #[tokio::test]
     async fn question_postgres_repository_test() {
         // Set up a postgres database question port for testing
-        let postgres_instance = Postgres::default().start().await;
+        let postgres_instance = Postgres::default().start().await.unwrap();
 
         let database_url = format!(
-            "postgres://postgres:postgres@127.0.0.1:{}/postgres",
-            postgres_instance.get_host_port_ipv4(5432).await
+            "postgres://postgres:postgres@127.0.0.1:{:?}/postgres",
+            postgres_instance.get_host_port_ipv4(5432).await.unwrap()
         );
         let database_config = DatabaseConfig {
             url: database_url.clone(),
@@ -126,6 +126,7 @@ mod question_repository_tests {
         test_question_repository(question_port).await;
     }
 }
+
 #[cfg(test)]
 mod cache_repository_tests {
     use std::time::Duration;
@@ -188,9 +189,9 @@ mod cache_repository_tests {
 
     #[tokio::test]
     async fn test_redis_cache_operations() {
-        let redis_instance = Redis::default().start().await;
+        let redis_instance = Redis::default().start().await.unwrap();
         let host = "127.0.0.1";
-        let port = redis_instance.get_host_port_ipv4(6379).await;
+        let port = redis_instance.get_host_port_ipv4(6379).await.unwrap();
         let cache = RedisCache::new(host, port).await.unwrap();
         test_cache_operations(cache).await;
     }

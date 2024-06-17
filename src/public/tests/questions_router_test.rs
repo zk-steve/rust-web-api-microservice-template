@@ -178,11 +178,11 @@ mod tests {
     #[tokio::test]
     async fn questions_router_postgres_test() {
         // Set up a postgres database question port for testing
-        let postgres_instance = postgres::Postgres::default().start().await;
+        let postgres_instance = postgres::Postgres::default().start().await.unwrap();
 
         let database_url = format!(
             "postgres://postgres:postgres@127.0.0.1:{}/postgres",
-            postgres_instance.get_host_port_ipv4(5432).await
+            postgres_instance.get_host_port_ipv4(5432).await.unwrap()
         );
         let database_config = DatabaseConfig {
             url: database_url.clone(),
