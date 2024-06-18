@@ -60,7 +60,7 @@ path = "../adapter"
 path = "../core"
 
 [dependencies.diesel_migrations]
-version = "2.1.0"
+version = "2.2.0"
 
 [dependencies.rand]
 version = "0.8.4"
