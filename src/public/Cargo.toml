@@ -93,7 +93,7 @@ features = ["postgres", "postgres_backend", "uuid"]
 version = "0.10.64"
 
 [dependencies.opentelemetry]
-version = "0.23.0"
+version = "0.24.0"
 
 [dependencies.serde]
 version = "1.0"
