@@ -1,3 +1,4 @@
+use opentelemetry::trace::TracerProvider;
 use opentelemetry::{global, KeyValue};
 use opentelemetry_otlp::WithExportConfig;
 use opentelemetry_sdk::propagation::TraceContextPropagator;
@@ -31,14 +32,15 @@ pub fn init_telemetry(service_name: &str, exporter_endpoint: &str, log_level: &s
     let tracer = opentelemetry_otlp::new_pipeline()
         .tracing()
         .with_exporter(exporter)
-        .with_trace_config(
-            trace::config().with_resource(Resource::new(vec![KeyValue::new(
+        .with_trace_config(trace::Config::default().with_resource(Resource::new(vec![
+            KeyValue::new(
                 opentelemetry_semantic_conventions::resource::SERVICE_NAME,
                 service_name.to_string(),
-            )])),
-        )
+            ),
+        ])))
         .install_batch(runtime::Tokio)
-        .expect("Error: Failed to initialize the tracer.");
+        .expect("Error: Failed to initialize the tracer.")
+        .tracer(service_name.to_string());
 
     // Define a subscriber
     let subscriber = Registry::default();
