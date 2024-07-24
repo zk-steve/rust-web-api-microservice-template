@@ -1,15 +1,11 @@
 use std::str::FromStr;
-use std::time::SystemTime;
+use std::time::{SystemTime};
 use aptos_sdk::move_types::u256::U256;
 use aptos_sdk::move_types::value::MoveValue;
-use aptos_sdk::rest_client::Client;
 use aptos_sdk::transaction_builder::TransactionBuilder;
-use aptos_sdk::types::account_address::AccountAddress;
 use aptos_sdk::types::chain_id::ChainId;
 use aptos_sdk::types::LocalAccount;
-use aptos_sdk::types::transaction::{RawTransaction, TransactionPayload};
-use crate::AptosClient;
-use crate::config::AptosVerifierConfig;
+use aptos_sdk::types::transaction::{SignedTransaction, TransactionPayload};
 
 pub fn str_to_u256(s: &str) -> MoveValue {
     let u256_value = U256::from_str(s).unwrap();
@@ -21,25 +17,17 @@ pub fn str_to_bool(s: &str) -> bool {
     bool::from_str(bool_str).unwrap()
 }
 
-pub fn transaction_builder(payload: TransactionPayload, sender: &LocalAccount, chain_id: ChainId) -> RawTransaction {
-    TransactionBuilder::new(
+pub fn build_transaction(payload: TransactionPayload, sender: &LocalAccount, chain_id: ChainId) -> SignedTransaction {
+    let i = sender.increment_sequence_number();
+    let tx = TransactionBuilder::new(
         payload,
         SystemTime::now().duration_since(SystemTime::UNIX_EPOCH).unwrap().as_secs() + 60,
         chain_id,
     )
         .sender(sender.address())
-        .sequence_number(sender.sequence_number())
+        .sequence_number(i)
         .max_gas_amount(10000)
         .gas_unit_price(100)
-        .build()
-}
-
-pub async fn init_config() -> anyhow::Result<(Client, LocalAccount, AccountAddress)> {
-    let config = AptosClient::from(AptosVerifierConfig::new());
-    let client = config.client;
-    let account = config.account;
-    let module_address = config.module_address;
-    let account_sequence = client.get_account(account.address()).await?.into_inner().sequence_number;
-    account.set_sequence_number(account_sequence);
-    Ok((client, account, module_address))
+        .build();
+    sender.sign_transaction(tx)
 }

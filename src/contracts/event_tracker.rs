@@ -1,3 +1,4 @@
+use std::time::Duration;
 use aptos_sdk::rest_client::aptos_api_types::{MoveType, VersionedEvent};
 use aptos_sdk::rest_client::Client;
 use aptos_sdk::types::account_address::AccountAddress;
@@ -25,7 +26,9 @@ impl EventTracker {
     }
 }
 impl EventTracker {
+
     pub async fn latest_event(&mut self) -> Option<VersionedEvent> {
+        tokio::time::sleep(Duration::from_secs(1)).await;
         let mut result = None;
         loop {
             let creation_number = self.creation_number + 1;
@@ -38,7 +41,7 @@ impl EventTracker {
             if events.len() == 0 { break; };
             self.creation_number = creation_number;
             events.into_iter().for_each(|e| {
-                if e.typ == self.typ {
+               if e.typ == self.typ {
                     result = Some(e);
                 }
             })

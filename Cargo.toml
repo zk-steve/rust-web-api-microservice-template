@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-aptos-sdk = {git = "https://github.com/sota-zk-labs/aptos-core" }
+aptos-sdk = { git = "https://github.com/zk-steve/aptos-core", branch = "steve" }
 once_cell = "1.19.0"
 tokio = { version = "1.35.1", features = ["full"] }
 url = { version = "2.4.0", features = ["serde"] }

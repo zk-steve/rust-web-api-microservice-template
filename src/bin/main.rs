@@ -2,18 +2,17 @@ use std::str::FromStr;
 use aptos_sdk::move_types::u256::U256;
 use aptos_sdk::move_types::value::MoveValue;
 use aptos_sdk::rest_client::aptos_api_types::{MoveType, VersionedEvent};
-use crate::config::AppConfig;
-use crate::config::EnvConfig;
-use crate::contracts::compute_next_layer::{compute_next_layer, compute_next_layer_view};
-use crate::contracts::event_tracker::EventTracker;
-use crate::contracts::helper::str_to_u256;
-use crate::contracts::init_fri_group::init_fri_group;
-use crate::contracts::types::{ComputeNextLayer, InitFriGroup, Verify, VerifyMerkle};
-use crate::contracts::verify_fri::verify_fri;
-use crate::contracts::verify_merkle::{verify_merkle, verify_merkle_view};
+use verifier_onchain_services::config::{AppConfig, EnvConfig};
+use verifier_onchain_services::contracts::compute_next_layer::{compute_next_layer, compute_next_layer_view};
+use verifier_onchain_services::contracts::event_tracker::EventTracker;
+use verifier_onchain_services::contracts::helper::str_to_u256;
+use verifier_onchain_services::contracts::init_fri_group::init_fri_group;
+use verifier_onchain_services::contracts::types::{ComputeNextLayer, InitFriGroup, Verify, VerifyMerkle};
+use verifier_onchain_services::contracts::verify_fri::verify_fri;
+use verifier_onchain_services::contracts::verify_merkle::{verify_merkle, verify_merkle_view};
 
-#[tokio::test]
-pub async fn test_a() -> anyhow::Result<()> {
+#[tokio::main]
+async fn main() {
     let proof_data = MoveValue::Vector(
         vec![
             MoveValue::U256(U256::from_str("732760739612308100049906584047157783110714348888046202826270876912749598168").unwrap()),
@@ -265,7 +264,7 @@ pub async fn test_a() -> anyhow::Result<()> {
 
 
     let config = AppConfig::from(EnvConfig::new());
-    let sequence_number = config.client.get_account(config.account.address()).await?.into_inner().sequence_number;
+    let sequence_number = config.client.get_account(config.account.address()).await.unwrap().into_inner().sequence_number;
     eprintln!("sequence_number = {:#?}", sequence_number);
     config.account.set_sequence_number(sequence_number);
     let input_fri = Verify {
@@ -323,6 +322,4 @@ pub async fn test_a() -> anyhow::Result<()> {
         }
         println!("merkle_verifier {}", true);
     }
-
-    Ok(())
 }

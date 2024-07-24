@@ -9,7 +9,7 @@ pub struct Verify {
 }
 
 pub struct InitFriGroup {
-    pub(crate) fri_ctx: MoveValue,
+    pub fri_ctx: MoveValue,
 }
 
 pub struct ComputeNextLayer {
