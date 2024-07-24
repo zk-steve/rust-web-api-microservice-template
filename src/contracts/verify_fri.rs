@@ -10,7 +10,7 @@ use crate::contracts::event_tracker::EventTracker;
 use crate::contracts::helper::build_transaction;
 use crate::contracts::types::Verify;
 
-pub async fn verify_fri(config: &AppConfig, data: Verify) -> anyhow::Result<(VersionedEvent, VersionedEvent)> {
+pub async fn verify_fri(config: &AppConfig, event_tracker: &mut EventTracker, data: Verify) -> anyhow::Result<VersionedEvent> {
     let payload = TransactionPayload::EntryFunction(
         EntryFunction::new(
             ModuleId::new(config.module_address, Identifier::new("fri_statement").unwrap()),
@@ -30,21 +30,8 @@ pub async fn verify_fri(config: &AppConfig, data: Verify) -> anyhow::Result<(Ver
     let txd = config.client.submit(&tx).await?.into_inner().hash;
     println!("Verify FRI: {}", txd);
 
-    let mut fri_ctx = EventTracker::new(
-        config.client.clone(),
-        config.account.address(),
-        MoveType::from_str(&format!("{}::fri_statement::FriCtx", config.module_address)).unwrap(),
-        3,
-    );
 
-    let mut compute_next_layer = EventTracker::new(
-        config.client.clone(),
-        config.account.address(),
-        MoveType::from_str(&format!("{}::fri_statement::ComputeNextLayer", config.module_address)).unwrap(),
-        4,
-    );
-    let event = fri_ctx.latest_event().await.unwrap();
-    let event_compute = compute_next_layer.latest_event().await.unwrap();
+    let event = event_tracker.latest_event().await.unwrap();
 
-    Ok((event, event_compute))
+    Ok(event)
 }

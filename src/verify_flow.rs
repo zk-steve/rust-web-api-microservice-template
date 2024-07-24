@@ -275,11 +275,27 @@ pub async fn test_a() -> anyhow::Result<()> {
         fri_step_size: MoveValue::U256(U256::from_str("3").unwrap()),
         expected_root: MoveValue::U256(U256::from_str("9390404794146759926609078012164974184924937654759657766410025620812402262016").unwrap()),
     };
-    let (event_init, event_compute) = verify_fri(&config, input_fri).await.expect("E");
+
+    let mut verify_fri_event_tracker = EventTracker::new(
+        config.client.clone(),
+        config.account.address(),
+        MoveType::from_str(&format!("{}::fri_statement::FriCtx", config.module_address)).unwrap(),
+        config.creation_number,
+    );
+
+    let event_init = verify_fri(&config, &mut verify_fri_event_tracker, input_fri).await.expect("E");
     let fri_ctx = MoveValue::U256(U256::from_str(event_init.data.get("fri_ctx").unwrap().as_str().unwrap()).unwrap());
     let input_init = InitFriGroup {
         fri_ctx
     };
+
+    let mut compute_next_layer_event_tracker = EventTracker::new(
+        config.client.clone(),
+        config.account.address(),
+        MoveType::from_str(&format!("{}::fri_statement::ComputeNextLayer", config.module_address)).unwrap(),
+        config.creation_number,
+    );
+    let event_compute = compute_next_layer_event_tracker.latest_event().await.unwrap();
 
     let input_compute = ComputeNextLayer {
         channel_ptr: str_to_u256(event_compute.data.get("channel_ptr").unwrap().as_str().unwrap()),
@@ -299,7 +315,7 @@ pub async fn test_a() -> anyhow::Result<()> {
         config.client.clone(),
         config.account.address(),
         MoveType::from_str(&name).unwrap(),
-        3,
+        config.creation_number,
     );
 
     loop {

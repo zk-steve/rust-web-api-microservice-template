@@ -60,5 +60,6 @@ pub async fn verify_merkle_view(config: &AppConfig) -> anyhow::Result<bool> {
     };
     let data = config.client.view_bcs_with_json_response(&view_payload, None).await.unwrap().into_inner();
     let data_str = format!("{:?}", data[0]);
+    eprintln!("data_str = {:#?}", data_str);
     Ok(str_to_bool(&data_str))
 }
