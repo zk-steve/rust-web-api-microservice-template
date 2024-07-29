@@ -41,7 +41,7 @@ version = "0.8.0"
 features = ["postgres", "redis"]
 
 [dependencies.tokio]
-version = "1.39.1"
+version = "1.39.2"
 features = ["full"]
 
 [dependencies.anyhow]
