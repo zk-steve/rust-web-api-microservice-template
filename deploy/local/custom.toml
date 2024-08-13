@@ -1,5 +1,5 @@
-service_name = "rust-api-server-local"
 gpt_answer_service_url = "grpc://0.0.0.0:50051"
+service_name = "rust-api-server-local"
 
 [server]
 port = 8888
@@ -8,5 +8,5 @@ port = 8888
 level = "info"
 
 [db.pg]
-url = "postgres://postgres:changeme@localhost:5432/postgres"
 max_size = 100
+url = "postgres://postgres:changeme@localhost:5432/postgres"

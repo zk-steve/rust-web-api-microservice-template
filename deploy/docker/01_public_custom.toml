@@ -1,14 +1,14 @@
-service_name = "rust-api-server-docker"
 exporter_endpoint = "http://quickwit:7281"
 gpt_answer_service_url = "grpc://gpt_answer_server:50051"
+service_name = "rust-api-server-docker"
 
 [server]
-url = "0.0.0.0"
 port = 8888
+url = "0.0.0.0"
 
 [log]
 level = "info"
 
 [db.pg]
-url = "postgres://postgres:changeme@postgres:5432/postgres"
 max_size = 10
+url = "postgres://postgres:changeme@postgres:5432/postgres"

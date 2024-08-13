@@ -8,7 +8,6 @@ use rust_core::entities::question::{QuestionEntity, QuestionId};
 
 #[derive(Debug, Queryable, Serialize, Selectable, Insertable, AsChangeset, Identifiable)]
 #[diesel(table_name = super::super::schema::questions)]
-#[cfg_attr(feature = "postgres", derive(diesel::pg::Pg))]
 pub struct QuestionModel {
     pub id: i32,
     /// Title of the question.

@@ -1,128 +1,34 @@
-bench = []
-example = []
-
-[[bin]]
-path = "src/main.rs"
-name = "cli"
-test = true
-doctest = true
-bench = true
-doc = true
-plugin = false
-proc-macro = false
-harness = true
-edition = "2021"
-required-features = []
-
-[[test]]
-path = "tests/mod.rs"
-name = "mod"
-test = true
-doctest = true
-bench = true
-doc = true
-plugin = false
-proc-macro = false
-harness = true
-edition = "2021"
-required-features = []
-
-[[test]]
-path = "tests/questions_router_test.rs"
-name = "questions_router_test"
-test = true
-doctest = true
-bench = true
-doc = true
-plugin = false
-proc-macro = false
-harness = true
-edition = "2021"
-required-features = []
-
 [package]
-name = "cli"
-edition = "2021"
-version = "0.0.1"
-build = "build.rs"
+autobenches = true
 autobins = true
 autoexamples = true
 autotests = true
-autobenches = true
-
-[dependencies.common]
-path = "../common"
-
-[dependencies.adapter]
-path = "../adapter"
-
-[dependencies.rust_core]
-path = "../core"
-
-[dependencies.diesel_migrations]
-version = "2.2.0"
-
-[dependencies.rand]
-version = "0.8.4"
-
-[dependencies.readonly]
-version = "0.2.12"
-
-[dependencies.serde_json]
-version = "1.0"
-
-[dependencies.tracing]
-version = "0.1"
-
-[dependencies.warp]
-version = "0.3.7"
-
-[dependencies.clap]
-version = "4.5.15"
-features = ["derive"]
-
-[dependencies.deadpool-diesel]
-version = "0.6.1"
-features = ["postgres", "serde"]
-
-[dependencies.diesel]
-version = "2.2.2"
-features = ["postgres", "postgres_backend", "uuid"]
-
-[dependencies.openssl]
-version = "0.10.66"
-
-[dependencies.opentelemetry]
-version = "0.23.0"
-
-[dependencies.serde]
-version = "1.0"
-features = ["derive"]
-
-[dependencies.testcontainers-modules]
-version = "0.9.0"
-features = ["postgres", "redis"]
-
-[dependencies.tokio]
-version = "1.39.2"
-features = ["full"]
-
-[dependencies.thiserror]
-version = "1.0.63"
-
-[dependencies.anyhow]
-version = "1.0.86"
-
-[lib]
-path = "src/lib.rs"
-name = "cli"
-test = true
-doctest = true
-bench = true
-doc = true
-plugin = false
-proc-macro = false
-harness = true
+build = "build.rs"
 edition = "2021"
-required-features = []
-crate-type = ["rlib"]
+name = "cli"
+version = "0.0.1"
+
+[dependencies]
+adapter = { workspace = true }
+anyhow = { workspace = true }
+clap = { workspace = true, features = ["derive"] }
+common = { workspace = true }
+deadpool-diesel = { workspace = true, features = ["postgres", "serde"] }
+diesel = { workspace = true, features = [
+  "postgres",
+  "postgres_backend",
+  "uuid",
+] }
+diesel_migrations = { workspace = true }
+openssl = { workspace = true }
+opentelemetry = { workspace = true }
+rand = { workspace = true }
+readonly = { workspace = true }
+rust_core = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+testcontainers-modules = { workspace = true, features = ["postgres", "redis"] }
+thiserror = { workspace = true }
+tokio = { workspace = true, features = ["full"] }
+tracing = { workspace = true }
+warp = { workspace = true }

@@ -6,6 +6,9 @@ PKG_NAME_GRPC=rust-grpc-server
 BUILD_VERSION=$(shell git describe --long)
 BUILD_RELEASE=$(shell git describe --tags --abbrev=0)
 
+cargo-fmt:
+	taplo fmt -o reorder_keys=true
+
 lint:
 	cargo clippy --fix --allow-dirty --allow-staged
 

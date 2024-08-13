@@ -1,9 +1,46 @@
 [workspace]
-members = [
-    "src/adapter",
-    "src/common",
-    "src/core",
-    "src/gpt_answer_server",
-    "src/public",
-]
 resolver = "2"
+
+members = [
+  "src/adapter",
+  "src/common",
+  "src/core",
+  "src/gpt_answer_server",
+  "src/public",
+]
+
+[workspace.dependencies]
+adapter = { path = "./src/adapter" }
+common = { path = "./src/common" }
+rust_core = { path = "./src/core" }
+
+anyhow = { version = "1.0.86" }
+async = { version = "0.0.2" }
+async-trait = { version = "0.1.81" }
+clap = { version = "4.5.15" }
+config = { version = "0.14.0" }
+deadpool-diesel = { version = "0.6.1" }
+diesel = { version = "2.1.6" }
+diesel_migrations = { version = "2.2.0" }
+glob = { version = "0.3.1" }
+openssl = { version = "0.10.66" }
+opentelemetry = { version = "0.24.0" }
+opentelemetry-otlp = { version = "0.17.0" }
+opentelemetry-semantic-conventions = { version = "0.16.0" }
+opentelemetry_sdk = { version = "0.24.1" }
+prost = { version = "0.13.1" }
+rand = { version = "0.9.0-alpha.2" }
+readonly = { version = "0.2.12" }
+redis-async = { version = "0.17.2" }
+serde = { version = "1.0" }
+serde_json = { version = "1.0.124" }
+testcontainers-modules = { version = "0.9.0" }
+thiserror = { version = "1.0.63" }
+tokio = { version = "1.39.2" }
+tonic = { version = "0.12.1" }
+tonic-build = { version = "0.12.1" }
+tracing = { version = "0.1.40" }
+tracing-bunyan-formatter = { version = "0.3.9" }
+tracing-opentelemetry = { version = "0.25.0" }
+tracing-subscriber = { version = "0.3.18" }
+warp = { version = "0.3.7" }

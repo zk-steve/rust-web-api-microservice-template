@@ -1,6 +1,6 @@
-service_name = "rust-grpc-server-docker"
 exporter_endpoint = "http://localhost:7281"
 server_endpoint = "0.0.0.0:50051"
+service_name = "rust-grpc-server-docker"
 
 [redis]
 host = "redis"

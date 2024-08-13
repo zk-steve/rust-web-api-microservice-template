@@ -1,54 +1,26 @@
-bin = []
-bench = []
-test = []
-example = []
-
 [package]
-name = "adapter"
-edition = "2021"
-version = "0.0.1"
+autobenches = true
 autobins = true
 autoexamples = true
 autotests = true
-autobenches = true
+edition = "2021"
+name = "adapter"
+version = "0.0.1"
 
-[dependencies.rust_core]
-path = "../core"
-
-[dependencies.common]
-path = "../common"
-
-[dependencies.diesel_migrations]
-version = "2.2.0"
-
-[dependencies.async-trait]
-version = "0.1.81"
-
-[dependencies.deadpool-diesel]
-version = "0.6.1"
-features = ["postgres", "serde"]
-
-[dependencies.diesel]
-version = "2.2.2"
-features = ["postgres", "postgres_backend", "uuid"]
-
-[dependencies.serde]
-version = "1.0"
-features = ["derive"]
-
-[dependencies.testcontainers-modules]
-version = "0.9.0"
-features = ["postgres", "redis"]
-
-[dependencies.tokio]
-version = "1.39.2"
-features = ["full"]
-
-[dependencies.anyhow]
-version = "1.0.86"
-
-[dependencies.tonic]
-version = "0.12.1"
-
-[dependencies.redis-async]
-version = "0.17.2"
+[dependencies]
+anyhow = { workspace = true }
+async-trait = { workspace = true }
+common = { workspace = true }
+deadpool-diesel = { workspace = true, features = ["postgres", "serde"] }
+diesel = { workspace = true, features = [
+  "postgres",
+  "postgres_backend",
+  "uuid",
+] }
+diesel_migrations = { workspace = true }
+redis-async = { workspace = true }
+rust_core = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+testcontainers-modules = { workspace = true, features = ["postgres", "redis"] }
+tokio = { workspace = true, features = ["full"] }
+tonic = { workspace = true }
