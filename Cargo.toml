@@ -17,7 +17,7 @@ rust_core = { path = "./src/core" }
 anyhow = { version = "1.0.87" }
 async = { version = "0.0.2" }
 async-trait = { version = "0.1.82" }
-clap = { version = "4.5.17" }
+clap = { version = "4.5.27" }
 config = { version = "0.14.0" }
 deadpool-diesel = { version = "0.6.1" }
 diesel = { version = "2.2.4" }
