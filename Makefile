@@ -46,3 +46,6 @@ profiling-public:
 
 profiling-gpt:
 	CARGO_PROFILE_RELEASE_DEBUG=true cargo flamegraph --root -- -c ./src/gpt_answer_server/config/* -c ./deploy/local/gpt_answer_server_custom.toml
+
+install-deps:
+	./scripts/install_dependencies.sh
