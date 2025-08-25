@@ -23,7 +23,7 @@ deadpool-diesel = { version = "0.6.1" }
 diesel = { version = "2.2.4" }
 diesel_migrations = { version = "2.2.0" }
 glob = { version = "0.3.1" }
-openssl = { version = "0.10.66" }
+openssl = { version = "0.10.73" }
 opentelemetry = { version = "0.24.0" }
 opentelemetry-otlp = { version = "0.17.0" }
 opentelemetry-semantic-conventions = { version = "0.16.0" }
